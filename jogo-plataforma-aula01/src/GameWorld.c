@@ -96,8 +96,12 @@ static void initObstaculos( GameWorld *gw ) {
         int xIni = GetScreenWidth() / 2 + tam * 2;
         int yIni = GetScreenHeight() / 2 + tam * 2;
         gw->obstaculos[i] = (Obstaculo) {
-            .pos = { xIni + tam * i, yIni - tam * i },
-            .dim = { tam, tam },
+            .ret = { 
+                xIni + tam * i, 
+                yIni - tam * i, 
+                tam, 
+                tam
+            },
             .cor = ORANGE
         };
         q++;
@@ -108,8 +112,12 @@ static void initObstaculos( GameWorld *gw ) {
         int xIni = GetScreenWidth() / 2 + tam;
         int yIni = GetScreenHeight() / 2 - tam;
         gw->obstaculos[i+q] = (Obstaculo) {
-            .pos = { xIni - tam * i, yIni - tam * i },
-            .dim = { tam, tam },
+            .ret = { 
+                xIni - tam * i,
+                yIni - tam * i,
+                tam,
+                tam
+            },
             .cor = ORANGE
         };
     }

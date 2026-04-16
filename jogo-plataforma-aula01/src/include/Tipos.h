@@ -16,10 +16,8 @@
  */
 typedef struct Jogador {
 
-    Vector2 pos;
-    Vector2 dim;
+    Rectangle ret;
     Vector2 vel;
-
     Color cor;
 
     float velPulo;
@@ -32,8 +30,7 @@ typedef struct Jogador {
  * @brief Representa um obstáculo estático do cenário.
  */
 typedef struct Obstaculo {
-    Vector2 pos;
-    Vector2 dim;
+    Rectangle ret;
     Color cor;
 } Obstaculo;
 

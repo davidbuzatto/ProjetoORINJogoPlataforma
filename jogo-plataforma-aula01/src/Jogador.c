@@ -25,10 +25,10 @@ Jogador *createJogador( float x, float y, float w, float h ) {
 
     Jogador *j = (Jogador*) malloc( sizeof( Jogador ) );
 
-    j->pos.x = x;
-    j->pos.y = y;
-    j->dim.x = w;
-    j->dim.y = h;
+    j->ret.x = x;
+    j->ret.y = y;
+    j->ret.width = w;
+    j->ret.height = h;
     j->vel = (Vector2) { 0 };
 
     j->cor = BLUE;
@@ -79,7 +79,7 @@ void inputJogador( Jogador *j ) {
 void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
 
     // fase X: move horizontalmente e resolve colisões laterais
-    j->pos.x += j->vel.x * delta;
+    j->ret.x += j->vel.x * delta;
     resolverColisaoJogadorObstaculosX( j, gw->obstaculos, gw->quantidadeObstaculos );
     resolverColisaoJogadorCenarioX( j );
 
@@ -88,7 +88,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
     if ( j->vel.y > j->velMaxQueda ) {
         j->vel.y = j->velMaxQueda;
     }
-    j->pos.y += j->vel.y * delta;
+    j->ret.y += j->vel.y * delta;
     resolverColisaoJogadorObstaculosY( j, gw->obstaculos, gw->quantidadeObstaculos );
     resolverColisaoJogadorCenarioY( j, gw->chao.y );
 
@@ -98,7 +98,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
  * @brief Desenha o jogador.
  */
 void drawJogador( Jogador *j ) {
-    DrawRectangle( j->pos.x, j->pos.y, j->dim.x, j->dim.y, j->cor );
+    DrawRectangleRec( j->ret, j->cor );
 }
 
 /**
@@ -109,14 +109,12 @@ static void resolverColisaoJogadorObstaculosX( Jogador *j, Obstaculo *obstaculos
     for ( int i = 0; i < quantidade; i++ ) {
 
         Obstaculo *o = &obstaculos[i];
-        Rectangle rJ = { j->pos.x, j->pos.y, j->dim.x, j->dim.y };
-        Rectangle rO = { o->pos.x, o->pos.y, o->dim.x, o->dim.y };
 
-        if ( CheckCollisionRecs( rJ, rO ) ) {
-            if ( j->pos.x + j->dim.x / 2 < o->pos.x + o->dim.x / 2 ) {
-                j->pos.x = o->pos.x - j->dim.x;
+        if ( CheckCollisionRecs( j->ret, o->ret ) ) {
+            if ( j->ret.x + j->ret.width / 2 < o->ret.x + o->ret.width / 2 ) {
+                j->ret.x = o->ret.x - j->ret.width;
             } else {
-                j->pos.x = o->pos.x + o->dim.x;
+                j->ret.x = o->ret.x + o->ret.width;
             }
             j->vel.x = 0;
         }
@@ -133,15 +131,13 @@ static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos
     for ( int i = 0; i < quantidade; i++ ) {
 
         Obstaculo *o = &obstaculos[i];
-        Rectangle rJ = { j->pos.x, j->pos.y, j->dim.x, j->dim.y };
-        Rectangle rO = { o->pos.x, o->pos.y, o->dim.x, o->dim.y };
 
-        if ( CheckCollisionRecs( rJ, rO ) ) {
-            if ( j->pos.y + j->dim.y / 2 < o->pos.y + o->dim.y / 2 ) {
-                j->pos.y = o->pos.y - j->dim.y;
+        if ( CheckCollisionRecs( j->ret, o->ret ) ) {
+            if ( j->ret.y + j->ret.width / 2 < o->ret.y + o->ret.height / 2 ) {
+                j->ret.y = o->ret.y - j->ret.height;
                 j->noChao = true;
             } else {
-                j->pos.y = o->pos.y + o->dim.y;
+                j->ret.y = o->ret.y + o->ret.height;
             }
             j->vel.y = 0;
         }
@@ -155,10 +151,10 @@ static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos
  */
 static void resolverColisaoJogadorCenarioX( Jogador *j ) {
 
-    if ( j->pos.x + j->dim.x > GetScreenWidth() ) {
-        j->pos.x = GetScreenWidth() - j->dim.x;
-    } else if ( j->pos.x < 0 ) {
-        j->pos.x = 0;
+    if ( j->ret.x + j->ret.width > GetScreenWidth() ) {
+        j->ret.x = GetScreenWidth() - j->ret.width;
+    } else if ( j->ret.x < 0 ) {
+        j->ret.x = 0;
     }
 
 }
@@ -168,8 +164,8 @@ static void resolverColisaoJogadorCenarioX( Jogador *j ) {
  */
 static void resolverColisaoJogadorCenarioY( Jogador *j, float chaoY ) {
 
-    if ( j->pos.y + j->dim.y > chaoY ) {
-        j->pos.y = chaoY - j->dim.y;
+    if ( j->ret.y + j->ret.height > chaoY ) {
+        j->ret.y = chaoY - j->ret.height;
         j->vel.y = 0;
         j->noChao = true;
     }
