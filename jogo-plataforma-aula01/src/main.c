@@ -1,9 +1,9 @@
 /**
  * @file main.c
  * @author Prof. Dr. David Buzatto
- * @brief Main function and logic for the game. Base template for game
- * development in C using Raylib (https://www.raylib.com/).
- * 
+ * @brief Função principal e lógica do jogo. Template base para desenvolvimento
+ * de jogos em C usando Raylib (https://www.raylib.com/).
+ *
  * @copyright Copyright (c) 2026
  */
 #include <stdio.h>
@@ -17,7 +17,7 @@ int main( void ) {
     GameWindow *gameWindow = createGameWindow(
         800,             // width
         450,             // height
-        "Window Title",  // title
+        "Jogo de Plataforma",  // title
         60,              // target FPS
         true,            // antialiasing
         false,           // resizable

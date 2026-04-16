@@ -1,32 +1,30 @@
 /**
  * @file GameWorld.h
  * @author Prof. Dr. David Buzatto
- * @brief GameWorld struct and function declarations.
- * 
+ * @brief Declarações da struct e funções do GameWorld.
+ *
  * @copyright Copyright (c) 2026
  */
 #pragma once
 
-typedef struct GameWorld {
-    int dummy;
-} GameWorld;
+#include "Tipos.h"
 
 /**
- * @brief Creates a dinamically allocated GameWorld struct instance.
+ * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
  */
 GameWorld* createGameWorld( void );
 
 /**
- * @brief Destroys a GameWindow object and its dependecies.
+ * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw );
 
 /**
- * @brief Reads user input and updates the state of the game.
+ * @brief Lê a entrada do usuário e atualiza o estado do jogo.
  */
 void updateGameWorld( GameWorld *gw, float delta );
 
 /**
- * @brief Draws the state of the game.
+ * @brief Desenha o estado do jogo.
  */
 void drawGameWorld( GameWorld *gw );

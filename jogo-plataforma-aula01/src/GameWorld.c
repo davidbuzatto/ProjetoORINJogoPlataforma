@@ -1,14 +1,17 @@
 /**
  * @file GameWorld.c
  * @author Prof. Dr. David Buzatto
- * @brief GameWorld implementation.
- * 
+ * @brief Implementação do GameWorld.
+ *
  * @copyright Copyright (c) 2026
  */
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "GameWorld.h"
+#include "Jogador.h"
+#include "Obstaculo.h"
+#include "Tipos.h"
 #include "ResourceManager.h"
 
 #include "raylib/raylib.h"
@@ -17,50 +20,99 @@
 //#include "raylib/raygui.h"       // other compilation units must only include
 //#undef RAYGUI_IMPLEMENTATION     // raygui.h
 
+static void initObstaculos( GameWorld *gw );
+
 /**
- * @brief Creates a dinamically allocated GameWorld struct instance.
+ * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
  */
 GameWorld* createGameWorld( void ) {
 
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
+    gw->jogador = createJogador( GetScreenWidth() / 2, GetScreenHeight() / 2, 50, 50 );
 
-    gw->dummy = 0;
+    initObstaculos( gw );
+
+    gw->chao = (Rectangle) {
+        .x = 0,
+        .y = GetScreenHeight() - 50,
+        .width = GetScreenWidth(),
+        .height = GetScreenHeight()
+    };
+
+    gw->gravidade = 500;
 
     return gw;
 
 }
 
 /**
- * @brief Destroys a GameWindow object and its dependecies.
+ * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw ) {
+    destroyJogador( gw->jogador );
     free( gw );
 }
 
 /**
- * @brief Reads user input and updates the state of the game.
+ * @brief Lê a entrada do usuário e atualiza o estado do jogo.
  */
 void updateGameWorld( GameWorld *gw, float delta ) {
+
+    Jogador *j = gw->jogador;
+
+    inputJogador( j );
+    updateJogador( j, gw, delta );
 
 }
 
 /**
- * @brief Draws the state of the game.
+ * @brief Desenha o estado do jogo.
  */
 void drawGameWorld( GameWorld *gw ) {
 
     BeginDrawing();
     ClearBackground( WHITE );
 
-    const char *text = "Basic game template";
-    Vector2 m = MeasureTextEx( GetFontDefault(), text, 40, 4 );
-    int x = GetScreenWidth() / 2 - m.x / 2;
-    int y = GetScreenHeight() / 2 - m.y / 2;
-    DrawRectangle( x, y, m.x, m.y, BLACK );
-    DrawText( text, x, y, 40, WHITE );
-
-    DrawFPS( 20, 20 );
+    DrawRectangleRec( gw->chao, GREEN );
+    drawObstaculos( gw->obstaculos, gw->quantidadeObstaculos );
+    drawJogador( gw->jogador );
 
     EndDrawing();
 
 }
+
+/**
+ * @brief Inicializa os obstáculos.
+ */
+static void initObstaculos( GameWorld *gw ) {
+
+    gw->quantidadeObstaculos = 10;
+    gw->obstaculos = (Obstaculo*) malloc( sizeof( Obstaculo ) * gw->quantidadeObstaculos );
+    
+    int q = 0;
+
+    for ( int i = 0; i < 5; i++ ) {
+        int tam = 50;
+        int xIni = GetScreenWidth() / 2 + tam * 2;
+        int yIni = GetScreenHeight() / 2 + tam * 2;
+        gw->obstaculos[i] = (Obstaculo) {
+            .pos = { xIni + tam * i, yIni - tam * i },
+            .dim = { tam, tam },
+            .cor = ORANGE
+        };
+        q++;
+    }
+
+    for ( int i = 0; i < 5; i++ ) {
+        int tam = 50;
+        int xIni = GetScreenWidth() / 2 + tam;
+        int yIni = GetScreenHeight() / 2 - tam;
+        gw->obstaculos[i+q] = (Obstaculo) {
+            .pos = { xIni - tam * i, yIni - tam * i },
+            .dim = { tam, tam },
+            .cor = ORANGE
+        };
+    }
+
+}
+
