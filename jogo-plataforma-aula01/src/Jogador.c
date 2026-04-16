@@ -33,6 +33,7 @@ Jogador *createJogador( float x, float y, float w, float h ) {
 
     j->cor = BLUE;
 
+    j->velAndando = 200;
     j->velPulo = -300;
     j->velMaxQueda = 500;
     j->noChao = false;
@@ -56,9 +57,9 @@ void destroyJogador( Jogador *j ) {
 void inputJogador( Jogador *j ) {
 
     if ( IsKeyDown( KEY_LEFT ) ) {
-        j->vel.x = -200;
+        j->vel.x = -j->velAndando;
     } else if ( IsKeyDown( KEY_RIGHT ) ) {
-        j->vel.x = 200;
+        j->vel.x = j->velAndando;
     } else {
         j->vel.x = 0;
     }
