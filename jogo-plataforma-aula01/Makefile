@@ -38,12 +38,16 @@ INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 # Add a prefix to INC_DIRS. So moduleA would become -ImoduleA. GCC understands this -I flag
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-# C flags
-CFLAGS := $(INC_FLAGS) -O1 -Wall -Wextra -Wno-unused-parameter -pedantic-errors -std=c99 -Wno-missing-braces
+# As flags -MMD e -MP fazem o compilador gerar automaticamente arquivos .d
+# com as dependências de cada arquivo fonte em relação aos headers incluídos.
+# Esses arquivos são incluídos ao final deste Makefile via -include $(DEPS),
+# permitindo que o Make detecte alterações em arquivos .h e recompile
+# apenas os arquivos afetados.
 
-# C++ flags
-# The -MMD and -MP flags together generate Makefiles for us!
-# These files will have .d instead of .o as the output.
+# Flags para C
+CFLAGS := $(INC_FLAGS) -MMD -MP -O1 -Wall -Wextra -Wno-unused-parameter -pedantic-errors -std=c99 -Wno-missing-braces
+
+# Flags para C++
 CPPFLAGS := $(INC_FLAGS) -MMD -MP -O1 -Wall -Wextra -Wno-unused-parameter -pedantic-errors -std=c++20 -Wno-missing-braces
 
 # Linker flags
