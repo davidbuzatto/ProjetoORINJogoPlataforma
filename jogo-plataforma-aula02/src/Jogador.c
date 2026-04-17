@@ -13,10 +13,8 @@
 #include "Jogador.h"
 #include "Tipos.h"
 
-static void resolverColisaoJogadorObstaculosX( Jogador *j, Obstaculo *obstaculos, int quantidade );
-static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos, int quantidade );
-static void resolverColisaoJogadorCenarioX( Jogador *j );
-static void resolverColisaoJogadorCenarioY( Jogador *j, float chaoY );
+static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa );
+static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa );
 
 /**
  * @brief Cria uma instância alocada dinamicamente da struct Jogador.
@@ -81,8 +79,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
 
     // fase X: move horizontalmente e resolve colisões laterais
     j->ret.x += j->vel.x * delta;
-    resolverColisaoJogadorObstaculosX( j, gw->obstaculos, gw->quantidadeObstaculos );
-    resolverColisaoJogadorCenarioX( j );
+    resolverColisaoJogadorMapaX( j, gw->mapa );
 
     // fase Y: aplica gravidade, move verticalmente e resolve colisões verticais
     j->vel.y += gw->gravidade * delta;
@@ -90,8 +87,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
         j->vel.y = j->velMaxQueda;
     }
     j->ret.y += j->vel.y * delta;
-    resolverColisaoJogadorObstaculosY( j, gw->obstaculos, gw->quantidadeObstaculos );
-    resolverColisaoJogadorCenarioY( j, gw->chao.y );
+    resolverColisaoJogadorMapaY( j, gw->mapa );
 
 }
 
@@ -103,13 +99,15 @@ void drawJogador( Jogador *j ) {
 }
 
 /**
- * @brief Resolve colisões do jogador com os obstáculos no eixo X.
+ * @brief Resolve colisões do jogador com o mapa no eixo X.
  */
-static void resolverColisaoJogadorObstaculosX( Jogador *j, Obstaculo *obstaculos, int quantidade ) {
+static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
-    for ( int i = 0; i < quantidade; i++ ) {
+    ElementoMapa *el = mapa->itens;
 
-        Obstaculo *o = &obstaculos[i];
+    while ( el != NULL ) {
+
+        Obstaculo *o = &el->obstaculo;
 
         if ( CheckCollisionRecs( j->ret, o->ret ) ) {
             if ( j->ret.x + j->ret.width / 2 < o->ret.x + o->ret.width / 2 ) {
@@ -120,18 +118,22 @@ static void resolverColisaoJogadorObstaculosX( Jogador *j, Obstaculo *obstaculos
             j->vel.x = 0;
         }
 
+        el = el->proximo;
+
     }
 
 }
 
 /**
- * @brief Resolve colisões do jogador com os obstáculos no eixo Y.
+ * @brief Resolve colisões do jogador com o mapa no eixo Y.
  */
-static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos, int quantidade ) {
+static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
 
-    for ( int i = 0; i < quantidade; i++ ) {
+    ElementoMapa *el = mapa->itens;
 
-        Obstaculo *o = &obstaculos[i];
+    while ( el != NULL ) {
+
+        Obstaculo *o = &el->obstaculo;
 
         if ( CheckCollisionRecs( j->ret, o->ret ) ) {
             if ( j->ret.y + j->ret.width / 2 < o->ret.y + o->ret.height / 2 ) {
@@ -143,32 +145,8 @@ static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos
             j->vel.y = 0;
         }
 
-    }
+        el = el->proximo;
 
-}
-
-/**
- * @brief Resolve colisões do jogador com os limites do cenário no eixo X.
- */
-static void resolverColisaoJogadorCenarioX( Jogador *j ) {
-
-    if ( j->ret.x + j->ret.width > GetScreenWidth() ) {
-        j->ret.x = GetScreenWidth() - j->ret.width;
-    } else if ( j->ret.x < 0 ) {
-        j->ret.x = 0;
-    }
-
-}
-
-/**
- * @brief Resolve colisões do jogador com os limites do cenário no eixo Y.
- */
-static void resolverColisaoJogadorCenarioY( Jogador *j, float chaoY ) {
-
-    if ( j->ret.y + j->ret.height > chaoY ) {
-        j->ret.y = chaoY - j->ret.height;
-        j->vel.y = 0;
-        j->noChao = true;
     }
 
 }

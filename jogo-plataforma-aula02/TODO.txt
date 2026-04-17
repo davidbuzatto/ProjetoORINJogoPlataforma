@@ -1,0 +1,2 @@
+Melhorar a api e os membros (principalmente em relação à lista de itens do mapa);
+Configurar a câmera;
