@@ -1,0 +1,9 @@
+x              x
+x     r        x
+x      r       x
+x       r     rx
+x        r   r x
+x           r  x
+x          r   x
+x         r    x
+xxxxxxxxxxxxxxxx

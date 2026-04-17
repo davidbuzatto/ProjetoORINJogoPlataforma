@@ -1,0 +1,20 @@
+Aula 03:
+    Texturas;
+    Corrida;
+    Pulo duplo;
+
+Aula 04:
+    Inimigos;
+    Colisão;
+    Vidas;
+    Reset
+
+Aula 05:
+    Animações;
+    Estados;
+    
+Aula 06:
+    Fases;
+
+Aula 07:
+    Sons
