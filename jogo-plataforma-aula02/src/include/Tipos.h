@@ -48,15 +48,27 @@ struct ElementoMapa {
  * @brief Representa um mapa de fase do jogo.
  */
 typedef struct Mapa {
-    ElementoMapa *itens;
-    int quantidadeItens;
+
+    // lista ligada de itens
+    ElementoMapa *elementos; // fim da lista
+    int quantidadeElementos;
+
+    float tamanhoElemento;
+    int linhas;
+    int colunas;
+
 } Mapa;
 
 /**
  * @brief Representa o mundo do jogo e seus elementos.
  */
 typedef struct GameWorld {
-    Jogador *jogador;
+
     Mapa *mapa;
+    Jogador *jogador;
+
+    Camera2D camera;
+
     float gravidade;
+
 } GameWorld;

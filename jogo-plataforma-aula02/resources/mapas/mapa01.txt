@@ -1,9 +1,17 @@
-x              x
-x     r        x
-x      r       x
-x       r     rx
-x        r   r x
-x           r  x
-x          r   x
-x         r    x
-xxxxxxxxxxxxxxxx
+x                                                          x
+x                                                          x
+x                   r                                      x
+x                  r                                       x
+x                 r                                        x
+x                r                                         x
+x               r            c                             x
+x         r    r            ccc                            x
+x          r        c   cccccccccccc                       x
+x           r      c                   cccccccccccc        x
+x            r    c                                        x
+x                c                                         x
+x               c                                          x
+x              c                                           x
+x             c                                            x
+rgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrg
+grgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgrgr

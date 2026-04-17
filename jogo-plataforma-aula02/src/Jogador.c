@@ -96,6 +96,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
  */
 void drawJogador( Jogador *j ) {
     DrawRectangleRec( j->ret, j->cor );
+    DrawRectangleLines( j->ret.x, j->ret.y, j->ret.width, j->ret.height, BLACK );
 }
 
 /**
@@ -103,7 +104,7 @@ void drawJogador( Jogador *j ) {
  */
 static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
-    ElementoMapa *el = mapa->itens;
+    ElementoMapa *el = mapa->elementos;
 
     while ( el != NULL ) {
 
@@ -129,7 +130,7 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
  */
 static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
 
-    ElementoMapa *el = mapa->itens;
+    ElementoMapa *el = mapa->elementos;
 
     while ( el != NULL ) {
 

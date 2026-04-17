@@ -23,3 +23,13 @@ void destroyMapa( Mapa *m );
  * @brief Desenha um mapa.
  */
 void drawMapa( Mapa *m );
+
+/**
+ * @brief Calcula a largura do mapa.
+ */
+float getLarguraMapa( Mapa *m );
+
+/**
+ * @brief Calcula a altura do mapa.
+ */
+float getAlturaMapa( Mapa *m );
