@@ -33,6 +33,8 @@ typedef struct Jogador {
 typedef struct Obstaculo {
     Rectangle ret;
     Color cor;
+    Rectangle fonte;
+    Texture2D *textura;
 } Obstaculo;
 
 /**

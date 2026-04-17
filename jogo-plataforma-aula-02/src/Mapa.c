@@ -11,6 +11,7 @@
 #include "raylib/raylib.h"
 
 #include "Mapa.h"
+#include "Obstaculo.h"
 #include "Tipos.h"
 
 /**
@@ -133,8 +134,7 @@ void drawMapa( Mapa *m ) {
 
     while ( el != NULL ) {
         Obstaculo *o = &el->obstaculo;
-        DrawRectangleRec( o->ret, o->cor );
-        DrawRectangleLines( o->ret.x, o->ret.y, o->ret.width, o->ret.height, BLACK );
+        drawObstaculo( o );
         el = el->proximo;
     }
 

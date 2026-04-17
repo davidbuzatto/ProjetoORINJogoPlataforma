@@ -11,7 +11,9 @@
 #include "raylib/raylib.h"
 
 #include "Mapa.h"
+#include "Obstaculo.h"
 #include "Tipos.h"
+#include "ResourceManager.h"
 
 /**
  * @brief Carrega um mapa a partir de uma arquivo.
@@ -51,16 +53,18 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
             // aqui decidimos se vamos ou não criar um novo elemento
             Color cor = BLACK;
-            bool criar = true;
+            bool criar = *caractereAtual != ' ';
 
             // o caractere corrente dita qual tipo de elemento será criado
-            switch ( *caractereAtual ) {
+            /*switch ( *caractereAtual ) {
                 case 'c': cor = GRAY; break;
                 case 'r': cor = ORANGE; break;
                 case 'g': cor = MAROON; break;
                 case 'x': cor = GREEN;  break;
                 default: criar = false; break;
-            }
+            }*/
+
+            int d = *caractereAtual - 'A';
 
             if ( criar ) {
 
@@ -73,7 +77,14 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                         .width = novoMapa->tamanhoElemento, 
                         .height = novoMapa->tamanhoElemento
                     },
-                    .cor = cor
+                    .cor = cor,
+                    .fonte = { 
+                        1 + ( novoMapa->tamanhoElemento + 1 ) * d, 
+                        1, 
+                        novoMapa->tamanhoElemento,
+                        novoMapa->tamanhoElemento
+                    },
+                    .textura = &rm.texturaTerreno
                 };
                 el->proximo = NULL;
 
@@ -133,8 +144,7 @@ void drawMapa( Mapa *m ) {
 
     while ( el != NULL ) {
         Obstaculo *o = &el->obstaculo;
-        DrawRectangleRec( o->ret, o->cor );
-        DrawRectangleLines( o->ret.x, o->ret.y, o->ret.width, o->ret.height, BLACK );
+        drawObstaculo( o );
         el = el->proximo;
     }
 

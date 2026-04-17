@@ -19,14 +19,14 @@ int main( void ) {
         450,                  // height
         "Jogo de Plataforma", // title
         60,                   // target FPS
-        true,                 // antialiasing
+        false,                // antialiasing
         false,                // resizable
         false,                // full screen
         false,                // undecorated
         false,                // always on top
         false,                // invisible background
         false,                // always run
-        false,                // load resources
+        true,                 // load resources
         false                 // init audio
     );
 

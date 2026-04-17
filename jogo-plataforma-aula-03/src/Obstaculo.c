@@ -17,7 +17,22 @@
  * @brief Desenha um obstáculo.
  */
 void drawObstaculo( Obstaculo *o ) {
-    DrawRectangleRec( o->ret, o->cor );
+
+    if ( o->textura == NULL ) {
+        DrawRectangleRec( o->ret, o->cor );
+        DrawRectangleLines( o->ret.x, o->ret.y, o->ret.width, o->ret.height, BLACK );
+        return;
+    }
+
+    DrawTexturePro(
+        *o->textura, 
+        o->fonte,
+        o->ret,
+        (Vector2) { 0 },
+        0.0f,
+        WHITE
+    );
+
 }
 
 /**

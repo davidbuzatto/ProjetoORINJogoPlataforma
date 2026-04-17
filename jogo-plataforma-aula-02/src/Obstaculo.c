@@ -18,6 +18,7 @@
  */
 void drawObstaculo( Obstaculo *o ) {
     DrawRectangleRec( o->ret, o->cor );
+    DrawRectangleLines( o->ret.x, o->ret.y, o->ret.width, o->ret.height, BLACK );
 }
 
 /**
