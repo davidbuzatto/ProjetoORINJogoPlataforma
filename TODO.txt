@@ -1,11 +1,7 @@
-Aula 03:
-    Texturas;
-    Corrida;
-    Pulo duplo;
-
 Aula 04:
     Inimigos;
-    Colisão;
+    Colisão Inimigos X Cenário;
+    Colisão Inimigos X Jogador;
     Vidas;
     Reset
 

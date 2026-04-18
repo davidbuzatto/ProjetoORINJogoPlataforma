@@ -52,21 +52,21 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
         } else {
 
             // aqui decidimos se vamos ou não criar um novo elemento
-            Color cor = BLACK;
             bool criar = *caractereAtual != ' ';
-
-            // o caractere corrente dita qual tipo de elemento será criado
-            /*switch ( *caractereAtual ) {
-                case 'c': cor = GRAY; break;
-                case 'r': cor = ORANGE; break;
-                case 'g': cor = MAROON; break;
-                case 'x': cor = GREEN;  break;
-                default: criar = false; break;
-            }*/
-
-            int d = *caractereAtual - 'A';
+            int deslocamento = *caractereAtual - 'A';
 
             if ( criar ) {
+
+                // isso aqui vai embora na próxima iteração
+                Color cor = BLACK;
+                bool apenasCor = true;
+                switch ( *caractereAtual ) {
+                    case 'c': cor = GRAY; break;
+                    case 'r': cor = ORANGE; break;
+                    case 'g': cor = MAROON; break;
+                    case 'x': cor = GREEN;  break;
+                    default: apenasCor = false;
+                }
 
                 ElementoMapa *el = (ElementoMapa*) malloc( sizeof( ElementoMapa ) );
 
@@ -79,12 +79,12 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                     },
                     .cor = cor,
                     .fonte = { 
-                        1 + ( novoMapa->tamanhoElemento + 1 ) * d, 
+                        1 + ( novoMapa->tamanhoElemento + 1 ) * deslocamento, 
                         1, 
                         novoMapa->tamanhoElemento,
                         novoMapa->tamanhoElemento
                     },
-                    .textura = &rm.texturaTerreno
+                    .textura = apenasCor ? NULL : &rm.texturaTerreno
                 };
                 el->proximo = NULL;
 
@@ -153,13 +153,13 @@ void drawMapa( Mapa *m ) {
 /**
  * @brief Calcula a largura do mapa.
  */
-float getLarguraMapa( Mapa *m ) {
-    return m->tamanhoElemento * m->colunas;
+int getLarguraMapa( Mapa *m ) {
+    return (int) ( m->tamanhoElemento * m->colunas );
 }
 
 /**
  * @brief Calcula a altura do mapa.
  */
-float getAlturaMapa( Mapa *m ) {
-    return m->tamanhoElemento * m->linhas;
+int getAlturaMapa( Mapa *m ) {
+    return (int) ( m->tamanhoElemento * m->linhas );
 }

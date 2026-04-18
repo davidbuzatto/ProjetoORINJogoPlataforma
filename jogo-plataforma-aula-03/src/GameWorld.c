@@ -21,6 +21,7 @@
 //#include "raylib/raygui.h"       // other compilation units must only include
 //#undef RAYGUI_IMPLEMENTATION     // raygui.h
 
+static void drawFundo( GameWorld *gw );
 static void updateCamera( GameWorld *gw );
 
 /**
@@ -41,7 +42,7 @@ GameWorld* createGameWorld( void ) {
         .zoom = 1.0f        // zoom da câmera. 1.0f significa sem escala
     };
 
-    gw->gravidade = 500;
+    gw->gravidade = 900;
 
     return gw;
 
@@ -75,9 +76,10 @@ void updateGameWorld( GameWorld *gw, float delta ) {
 void drawGameWorld( GameWorld *gw ) {
 
     BeginDrawing();
-    ClearBackground( WHITE );
+    ClearBackground( (Color) { 9, 157, 223, 225 } );
 
     BeginMode2D( gw->camera );
+    drawFundo( gw );
     drawMapa( gw->mapa );
     drawJogador( gw->jogador );
     EndMode2D();
@@ -85,6 +87,21 @@ void drawGameWorld( GameWorld *gw ) {
     DrawFPS( 10, 10 );
 
     EndDrawing();
+
+}
+
+static void drawFundo( GameWorld *gw ) {
+
+    int larguraFundo = rm.texturaFundo.width;
+    int larguraMapa = getLarguraMapa( gw->mapa );
+    int alturaMapa = getAlturaMapa( gw->mapa );
+    int repeticoes = larguraMapa / larguraFundo;
+
+    int deslocamentoParallax = (int) ( ( gw->camera.target.x / (float) larguraMapa ) * 200 );
+
+    for ( int i = 0; i <= repeticoes; i++ ) {
+        DrawTexture( rm.texturaFundo, larguraFundo * i - deslocamentoParallax, alturaMapa - rm.texturaFundo.height, WHITE );
+    }
 
 }
 

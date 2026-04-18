@@ -32,9 +32,12 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->cor = BLUE;
 
     novoJogador->velAndando = 200;
-    novoJogador->velPulo = -300;
-    novoJogador->velMaxQueda = 500;
-    novoJogador->noChao = false;
+    novoJogador->velCorrendo = 350;
+    novoJogador->velPulo = -550;
+    novoJogador->velMaxQueda = 600;
+
+    novoJogador->quantidadePulos = 0;
+    novoJogador->quantidadeMaxPulos = 2;
 
     return novoJogador;
 
@@ -54,21 +57,20 @@ void destroyJogador( Jogador *j ) {
  */
 void inputJogador( Jogador *j ) {
 
+    bool controlDown = IsKeyDown( KEY_LEFT_CONTROL );
+
     if ( IsKeyDown( KEY_LEFT ) ) {
-        j->vel.x = -j->velAndando;
+        j->vel.x = controlDown ? -j->velCorrendo : -j->velAndando;
     } else if ( IsKeyDown( KEY_RIGHT ) ) {
-        j->vel.x = j->velAndando;
+        j->vel.x = controlDown ?  j->velCorrendo :  j->velAndando;
     } else {
         j->vel.x = 0;
     }
 
-    if ( IsKeyPressed( KEY_SPACE ) && j->noChao ) {
+    if ( IsKeyPressed( KEY_SPACE ) && j->quantidadePulos < j->quantidadeMaxPulos ) {
         j->vel.y = j->velPulo;
+        j->quantidadePulos++;
     }
-
-    // noChao será setado pelos resolvedores de colisão ao fim do frame.
-    // resetar aqui garante que o estado reflita apenas o frame atual.
-    j->noChao = false;
 
 }
 
@@ -139,7 +141,7 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
         if ( CheckCollisionRecs( j->ret, o->ret ) ) {
             if ( j->ret.y + j->ret.width / 2 < o->ret.y + o->ret.height / 2 ) {
                 j->ret.y = o->ret.y - j->ret.height;
-                j->noChao = true;
+                j->quantidadePulos = 0;
             } else {
                 j->ret.y = o->ret.y + o->ret.height;
             }

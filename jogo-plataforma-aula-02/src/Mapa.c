@@ -143,13 +143,13 @@ void drawMapa( Mapa *m ) {
 /**
  * @brief Calcula a largura do mapa.
  */
-float getLarguraMapa( Mapa *m ) {
-    return m->tamanhoElemento * m->colunas;
+int getLarguraMapa( Mapa *m ) {
+    return (int) ( m->tamanhoElemento * m->colunas );
 }
 
 /**
  * @brief Calcula a altura do mapa.
  */
-float getAlturaMapa( Mapa *m ) {
-    return m->tamanhoElemento * m->linhas;
+int getAlturaMapa( Mapa *m ) {
+    return (int) ( m->tamanhoElemento * m->linhas );
 }

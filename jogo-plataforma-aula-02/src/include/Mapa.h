@@ -27,9 +27,9 @@ void drawMapa( Mapa *m );
 /**
  * @brief Calcula a largura do mapa.
  */
-float getLarguraMapa( Mapa *m );
+int getLarguraMapa( Mapa *m );
 
 /**
  * @brief Calcula a altura do mapa.
  */
-float getAlturaMapa( Mapa *m );
+int getAlturaMapa( Mapa *m );
