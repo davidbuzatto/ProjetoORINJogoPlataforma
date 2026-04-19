@@ -11,6 +11,7 @@
 #include "raylib/raylib.h"
 
 #include "Mapa.h"
+#include "Item.h"
 #include "Obstaculo.h"
 #include "Tipos.h"
 #include "ResourceManager.h"
@@ -74,6 +75,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                     },
                     .textura = &rm.texturaTerreno
                 };
+                el->tipoElemento = TIPO_ELEMENTO_MAPA_OBSTACULO;
                 el->proximo = NULL;
 
                 // inserção na lista
@@ -131,8 +133,23 @@ void desenharMapa( Mapa *m ) {
     ElementoMapa *el = m->elementos;
 
     while ( el != NULL ) {
-        Obstaculo *o = &el->obstaculo;
-        desenharObstaculo( o );
+        
+        switch ( el->tipoElemento ) {
+            case TIPO_ELEMENTO_MAPA_OBSTACULO: {
+                Obstaculo *o = &el->obstaculo;
+                desenharObstaculo( o );
+                break;
+            }
+            case TIPO_ELEMENTO_MAPA_ITEM: {
+                Item *item = &el->item;
+                desenharItem( item );
+                break;
+            }
+            case TIPO_ELEMENTO_MAPA_INIMIGO: {
+                break;
+            }
+        }
+        
         el = el->proximo;
     }
 

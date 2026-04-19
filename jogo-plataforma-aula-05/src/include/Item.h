@@ -1,7 +1,7 @@
 /**
  * @file Obstaculo.h
  * @author Prof. Dr. David Buzatto
- * @brief Declarações das funções do Obstáculo.
+ * @brief Declarações das funções do Item.
  *
  * @copyright Copyright (c) 2026
  */
@@ -10,6 +10,6 @@
 #include "Tipos.h"
 
 /**
- * @brief Desenha um obstáculo.
+ * @brief Desenha um item.
  */
-void desenharObstaculo( Obstaculo *o );
+void desenharItem( Item *item );

@@ -24,6 +24,12 @@ typedef enum EstadoJogador {
     ESTADO_JOGADOR_PULANDO_CORRENDO,
 } EstadoJogador;
 
+typedef enum TipoElementoMapa {
+    TIPO_ELEMENTO_MAPA_OBSTACULO,
+    TIPO_ELEMENTO_MAPA_ITEM,
+    TIPO_ELEMENTO_MAPA_INIMIGO,
+} TipoElementoMapa;
+
 /**
  * @brief Representa um quadro de animação com imagem.
  */
@@ -88,6 +94,16 @@ typedef struct Jogador {
 /**
  * @brief Representa um obstáculo estático do cenário.
  */
+typedef struct Item {
+    Rectangle ret;
+    Color cor;
+    Rectangle fonte;
+    Texture2D *textura;
+} Item;
+
+/**
+ * @brief Representa um obstáculo estático do cenário.
+ */
 typedef struct Obstaculo {
     Rectangle ret;
     Color cor;
@@ -101,6 +117,8 @@ typedef struct Obstaculo {
 typedef struct ElementoMapa ElementoMapa;
 struct ElementoMapa {
     Obstaculo obstaculo;
+    Item item;
+    TipoElementoMapa tipoElemento;
     ElementoMapa *proximo;
 };
 

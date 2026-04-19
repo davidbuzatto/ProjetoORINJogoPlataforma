@@ -34,12 +34,3 @@ void desenharObstaculo( Obstaculo *o ) {
     );
 
 }
-
-/**
- * @brief Desenha todos os obstáculos.
- */
-void desenharObstaculos( Obstaculo *obstaculos, int quantidade ) {
-    for ( int i = 0; i < quantidade; i++ ) {
-        desenharObstaculo( &obstaculos[i] );
-    }
-}
