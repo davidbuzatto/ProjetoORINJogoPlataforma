@@ -42,10 +42,13 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->cor = BLUE;
 
     novoJogador->velAndando = 200;
-    novoJogador->velAndandoRapido = 350;
-    novoJogador->velCorrendo = 500;
+    novoJogador->velAndandoRapido = 400;
+    novoJogador->velCorrendo = 600;
     novoJogador->velPulo = -550;
     novoJogador->velMaxQueda = 600;
+
+    novoJogador->aceleracao = 200;
+    novoJogador->desaceleracao = 400;
 
     novoJogador->quantidadePulos = 0;
     novoJogador->quantidadeMaxPulos = 2;
@@ -183,21 +186,43 @@ void destroyJogador( Jogador *j ) {
 /**
  * @brief Lê a entrada do usuário e atualiza as velocidades do jogador.
  */
-void inputJogador( Jogador *j ) {
+void inputJogador( Jogador *j, float delta ) {
 
-    bool controlDown = IsKeyDown( KEY_LEFT_CONTROL );
-
-    if ( IsKeyDown( KEY_LEFT ) ) {
-        j->vel.x = controlDown ? -j->velAndandoRapido : -j->velAndando;
-        j->olhandoParaDireita = false;
-        j->estado = controlDown ? ESTADO_JOGADOR_ANDANDO_RAPIDO : ESTADO_JOGADOR_ANDANDO;
-    } else if ( IsKeyDown( KEY_RIGHT ) ) {
-        j->vel.x = controlDown ?  j->velAndandoRapido :  j->velAndando;
+    if ( IsKeyDown( KEY_RIGHT ) ) {
+        j->vel.x += j->aceleracao * delta;
+        if ( j->vel.x > j->velCorrendo ) {
+            j->vel.x = j->velCorrendo;
+        }
         j->olhandoParaDireita = true;
-        j->estado = controlDown ? ESTADO_JOGADOR_ANDANDO_RAPIDO : ESTADO_JOGADOR_ANDANDO;
+    } else if ( IsKeyDown( KEY_LEFT ) ) {
+        j->vel.x -= j->aceleracao * delta;
+        if ( j->vel.x < -j->velCorrendo ) {
+            j->vel.x = -j->velCorrendo;
+        }
+        j->olhandoParaDireita = false;
     } else {
-        j->vel.x = 0;
+        if ( j->vel.x > 0 ) {
+            j->vel.x -= j->desaceleracao * delta;
+            if ( j->vel.x < 0 ) {
+                j->vel.x = 0;
+            }
+        } else if ( j->vel.x < 0 ) {
+            j->vel.x += j->desaceleracao * delta;
+            if ( j->vel.x > 0 ) {
+                j->vel.x = 0;
+            }
+        }
+    }
+
+    float absVelX = fabsf( j->vel.x );
+    if ( absVelX < 1.0f ) {
         j->estado = ESTADO_JOGADOR_PARADO;
+    } else if ( absVelX <= j->velAndando ) {
+        j->estado = ESTADO_JOGADOR_ANDANDO;
+    } else if ( absVelX <= j->velAndandoRapido ) {
+        j->estado = ESTADO_JOGADOR_ANDANDO_RAPIDO;
+    } else {
+        j->estado = ESTADO_JOGADOR_CORRENDO;
     }
 
     if ( IsKeyPressed( KEY_SPACE ) && j->quantidadePulos < j->quantidadeMaxPulos ) {

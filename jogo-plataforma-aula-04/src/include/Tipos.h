@@ -60,6 +60,9 @@ typedef struct Jogador {
     float velPulo;
     float velMaxQueda;
 
+    float aceleracao;
+    float desaceleracao;
+
     int quantidadePulos;
     int quantidadeMaxPulos;
 
