@@ -236,19 +236,27 @@ void entradaJogador( Jogador *j, float delta ) {
     if ( IsKeyDown( KEY_RIGHT ) ) {
         if ( j->vel.x < 0 ) {
             j->vel.x += j->frenagem * delta;
-            if ( j->vel.x > 0 ) j->vel.x = 0;
+            if ( j->vel.x > 0 ) {
+                j->vel.x = 0;
+            }
         } else {
             j->vel.x += j->aceleracao * delta;
-            if ( j->vel.x > j->velCorrendo ) j->vel.x = j->velCorrendo;
+            if ( j->vel.x > j->velCorrendo ) {
+                j->vel.x = j->velCorrendo;
+            }
         }
         j->olhandoParaDireita = true;
     } else if ( IsKeyDown( KEY_LEFT ) ) {
         if ( j->vel.x > 0 ) {
             j->vel.x -= j->frenagem * delta;
-            if ( j->vel.x < 0 ) j->vel.x = 0;
+            if ( j->vel.x < 0 ) {
+                j->vel.x = 0;
+            }
         } else {
             j->vel.x -= j->aceleracao * delta;
-            if ( j->vel.x < -j->velCorrendo ) j->vel.x = -j->velCorrendo;
+            if ( j->vel.x < -j->velCorrendo ) {
+                j->vel.x = -j->velCorrendo;
+            }
         }
         j->olhandoParaDireita = false;
     } else {
@@ -358,11 +366,11 @@ static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vecto
         );
 
         if ( MOSTRAR_RETANGULOS ) {
-            float rcDrawX = j->olhandoParaDireita
+            float xDesenho = j->olhandoParaDireita
                 ? j->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x
                 : j->ret.x - qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-            float rcDrawY = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
-            DrawRectangle( rcDrawX, rcDrawY, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
+            float yDesenho = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+            DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 
     }
@@ -389,23 +397,23 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
         Obstaculo *o = &el->obstaculo;
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        float rcOffsetX = j->olhandoParaDireita
+        float deslocamentoX = j->olhandoParaDireita
             ? qa->deslocamentoDesenho.x + qa->retColisao.x
             : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float rcOffsetY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
 
         Rectangle rJ = {
-            j->ret.x + rcOffsetX,
-            j->ret.y + rcOffsetY,
+            j->ret.x + deslocamentoX,
+            j->ret.y + deslocamentoY,
             qa->retColisao.width,
             qa->retColisao.height
         };
 
         if ( CheckCollisionRecs( rJ, o->ret ) ) {
             if ( rJ.x + rJ.width / 2 < o->ret.x + o->ret.width / 2 ) {
-                j->ret.x = o->ret.x - qa->retColisao.width - rcOffsetX;
+                j->ret.x = o->ret.x - qa->retColisao.width - deslocamentoX;
             } else {
-                j->ret.x = o->ret.x + o->ret.width - rcOffsetX;
+                j->ret.x = o->ret.x + o->ret.width - deslocamentoX;
             }
             j->vel.x = 0;
         }
@@ -428,24 +436,24 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
         Obstaculo *o = &el->obstaculo;
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        float rcOffsetX = j->olhandoParaDireita
+        float deslocamentoX = j->olhandoParaDireita
             ? qa->deslocamentoDesenho.x + qa->retColisao.x
             : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float rcOffsetY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
 
         Rectangle rJ = {
-            j->ret.x + rcOffsetX,
-            j->ret.y + rcOffsetY,
+            j->ret.x + deslocamentoX,
+            j->ret.y + deslocamentoY,
             qa->retColisao.width,
             qa->retColisao.height
         };
 
         if ( CheckCollisionRecs( rJ, o->ret ) ) {
             if ( rJ.y + rJ.height / 2 < o->ret.y + o->ret.height / 2 ) {
-                j->ret.y = o->ret.y - qa->retColisao.height - rcOffsetY;
+                j->ret.y = o->ret.y - qa->retColisao.height - deslocamentoY;
                 j->quantidadePulos = 0;
             } else {
-                j->ret.y = o->ret.y + o->ret.height - rcOffsetY;
+                j->ret.y = o->ret.y + o->ret.height - deslocamentoY;
             }
             j->vel.y = 0;
         }

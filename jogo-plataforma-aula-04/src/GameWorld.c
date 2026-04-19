@@ -31,8 +31,8 @@ GameWorld* createGameWorld( void ) {
 
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
 
-    gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
-    //gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
+    //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
+    gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
     gw->jogador = criarJogador( GetScreenWidth() / 2, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
 
     gw->camera = (Camera2D) {
