@@ -164,11 +164,55 @@ Jogador *createJogador( float x, float y, float w, float h ) {
         }
     );
 
+    novoJogador->animacaoPulandoRapido.quantidadeQuadros = 4;
+    novoJogador->animacaoPulandoRapido.quadroAtual = 0;
+    novoJogador->animacaoPulandoRapido.contadorTempoQuadro = 0.0f;
+    novoJogador->animacaoPulandoRapido.pararNoUltimoQuadro = false;
+    novoJogador->animacaoPulandoRapido.executarUmaVez = false;
+    novoJogador->animacaoPulandoRapido.finalizada = false;
+    createQuadrosAnimacao( &novoJogador->animacaoPulandoRapido, novoJogador->animacaoPulandoRapido.quantidadeQuadros );
+    initQuadrosAnimacao(
+        novoJogador->animacaoPulandoRapido.quadros,
+        novoJogador->animacaoPulandoRapido.quantidadeQuadros,
+        25,              // duração padrão para cada quadro
+        248, 397,        // início
+        48, 48,          // dimensões
+        4,               // separação
+        0, 0,            // deslocamento
+        false,           // de trás para frente
+        (Rectangle) {    // retângulo de colisão padrão para cada quadro
+            18, 36, 60, 60
+        }
+    );
+
+    novoJogador->animacaoPulandoCorrendo.quantidadeQuadros = 4;
+    novoJogador->animacaoPulandoCorrendo.quadroAtual = 0;
+    novoJogador->animacaoPulandoCorrendo.contadorTempoQuadro = 0.0f;
+    novoJogador->animacaoPulandoCorrendo.pararNoUltimoQuadro = false;
+    novoJogador->animacaoPulandoCorrendo.executarUmaVez = false;
+    novoJogador->animacaoPulandoCorrendo.finalizada = false;
+    createQuadrosAnimacao( &novoJogador->animacaoPulandoCorrendo, novoJogador->animacaoPulandoCorrendo.quantidadeQuadros );
+    initQuadrosAnimacao(
+        novoJogador->animacaoPulandoCorrendo.quadros,
+        novoJogador->animacaoPulandoCorrendo.quantidadeQuadros,
+        15,              // duração padrão para cada quadro
+        248, 397,        // início
+        48, 48,          // dimensões
+        4,               // separação
+        0, 0,            // deslocamento
+        false,           // de trás para frente
+        (Rectangle) {    // retângulo de colisão padrão para cada quadro
+            18, 36, 60, 60
+        }
+    );
+
     novoJogador->animacoes[ESTADO_JOGADOR_PARADO] = &novoJogador->animacaoParado; quantidadeAnimacoes++;
     novoJogador->animacoes[ESTADO_JOGADOR_ANDANDO] = &novoJogador->animacaoAndando; quantidadeAnimacoes++;
     novoJogador->animacoes[ESTADO_JOGADOR_ANDANDO_RAPIDO] = &novoJogador->animacaoAndandoRapido; quantidadeAnimacoes++;
     novoJogador->animacoes[ESTADO_JOGADOR_CORRENDO] = &novoJogador->animacaoCorrendo; quantidadeAnimacoes++;
     novoJogador->animacoes[ESTADO_JOGADOR_PULANDO] = &novoJogador->animacaoPulando; quantidadeAnimacoes++;
+    novoJogador->animacoes[ESTADO_JOGADOR_PULANDO_RAPIDO] = &novoJogador->animacaoPulandoRapido; quantidadeAnimacoes++;
+    novoJogador->animacoes[ESTADO_JOGADOR_PULANDO_CORRENDO] = &novoJogador->animacaoPulandoCorrendo; quantidadeAnimacoes++;
     novoJogador->quantidadeAnimacoes = quantidadeAnimacoes;
 
     return novoJogador;
@@ -223,7 +267,13 @@ void inputJogador( Jogador *j, float delta ) {
 
     float absVelX = fabsf( j->vel.x );
     if ( j->quantidadePulos > 0 ) {
-        j->estado = ESTADO_JOGADOR_PULANDO;
+        if ( absVelX <= j->velAndando ) {
+            j->estado = ESTADO_JOGADOR_PULANDO;
+        } else if ( absVelX <= j->velAndandoRapido ) {
+            j->estado = ESTADO_JOGADOR_PULANDO_RAPIDO;
+        } else {
+            j->estado = ESTADO_JOGADOR_PULANDO_CORRENDO;
+        }
     } else if ( absVelX < 1.0f ) {
         j->estado = ESTADO_JOGADOR_PARADO;
     } else if ( absVelX <= j->velAndando ) {
