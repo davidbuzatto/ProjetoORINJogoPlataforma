@@ -134,7 +134,7 @@ static void resolverColisaoJogadorObstaculosY( Jogador *j, Obstaculo *obstaculos
         Obstaculo *o = &obstaculos[i];
 
         if ( CheckCollisionRecs( j->ret, o->ret ) ) {
-            if ( j->ret.y + j->ret.width / 2 < o->ret.y + o->ret.height / 2 ) {
+            if ( j->ret.y + j->ret.height / 2 < o->ret.y + o->ret.height / 2 ) {
                 j->ret.y = o->ret.y - j->ret.height;
                 j->noChao = true;
             } else {

@@ -308,12 +308,20 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
     while ( el != NULL ) {
 
         Obstaculo *o = &el->obstaculo;
+        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        if ( CheckCollisionRecs( j->ret, o->ret ) ) {
-            if ( j->ret.x + j->ret.width / 2 < o->ret.x + o->ret.width / 2 ) {
-                j->ret.x = o->ret.x - j->ret.width;
+        Rectangle rJ = {
+            j->ret.x + qa->retColisao.x,
+            j->ret.y + qa->retColisao.y,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
+        if ( CheckCollisionRecs( rJ, o->ret ) ) {
+            if ( rJ.x + rJ.width / 2 < o->ret.x + o->ret.width / 2 ) {
+                j->ret.x = o->ret.x - qa->retColisao.x - qa->retColisao.width;
             } else {
-                j->ret.x = o->ret.x + o->ret.width;
+                j->ret.x = o->ret.x + o->ret.width - qa->retColisao.x;
             }
             j->vel.x = 0;
         }
@@ -334,13 +342,21 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
     while ( el != NULL ) {
 
         Obstaculo *o = &el->obstaculo;
+        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        if ( CheckCollisionRecs( j->ret, o->ret ) ) {
-            if ( j->ret.y + j->ret.width / 2 < o->ret.y + o->ret.height / 2 ) {
-                j->ret.y = o->ret.y - j->ret.height;
+        Rectangle rJ = {
+            j->ret.x + qa->retColisao.x,
+            j->ret.y + qa->retColisao.y,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
+        if ( CheckCollisionRecs( rJ, o->ret ) ) {
+            if ( rJ.y + rJ.height / 2 < o->ret.y + o->ret.height / 2 ) {
+                j->ret.y = o->ret.y - qa->retColisao.y - qa->retColisao.height;
                 j->quantidadePulos = 0;
             } else {
-                j->ret.y = o->ret.y + o->ret.height;
+                j->ret.y = o->ret.y + o->ret.height - qa->retColisao.y;
             }
             j->vel.y = 0;
         }
