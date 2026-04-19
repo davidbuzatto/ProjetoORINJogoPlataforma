@@ -394,28 +394,32 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
     while ( el != NULL ) {
 
-        Obstaculo *o = &el->obstaculo;
-        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
+        if ( el->tipo == TIPO_ELEMENTO_MAPA_OBSTACULO ) {
 
-        float deslocamentoX = j->olhandoParaDireita
-            ? qa->deslocamentoDesenho.x + qa->retColisao.x
-            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            Obstaculo *o = (Obstaculo*) el->endereco;
+            QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        Rectangle retColCalculado = {
-            j->ret.x + deslocamentoX,
-            j->ret.y + deslocamentoY,
-            qa->retColisao.width,
-            qa->retColisao.height
-        };
+            float deslocamentoX = j->olhandoParaDireita
+                ? qa->deslocamentoDesenho.x + qa->retColisao.x
+                : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
+            float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
 
-        if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
-            if ( retColCalculado.x + retColCalculado.width / 2 < o->ret.x + o->ret.width / 2 ) {
-                j->ret.x = o->ret.x - qa->retColisao.width - deslocamentoX;
-            } else {
-                j->ret.x = o->ret.x + o->ret.width - deslocamentoX;
+            Rectangle retColCalculado = {
+                j->ret.x + deslocamentoX,
+                j->ret.y + deslocamentoY,
+                qa->retColisao.width,
+                qa->retColisao.height
+            };
+
+            if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
+                if ( retColCalculado.x + retColCalculado.width / 2 < o->ret.x + o->ret.width / 2 ) {
+                    j->ret.x = o->ret.x - qa->retColisao.width - deslocamentoX;
+                } else {
+                    j->ret.x = o->ret.x + o->ret.width - deslocamentoX;
+                }
+                j->vel.x = 0;
             }
-            j->vel.x = 0;
+
         }
 
         el = el->proximo;
@@ -433,29 +437,33 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
 
     while ( el != NULL ) {
 
-        Obstaculo *o = &el->obstaculo;
-        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
+        if ( el->tipo == TIPO_ELEMENTO_MAPA_OBSTACULO ) {
 
-        float deslocamentoX = j->olhandoParaDireita
-            ? qa->deslocamentoDesenho.x + qa->retColisao.x
-            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            Obstaculo *o = (Obstaculo*) el->endereco;
+            QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
-        Rectangle retColCalculado = {
-            j->ret.x + deslocamentoX,
-            j->ret.y + deslocamentoY,
-            qa->retColisao.width,
-            qa->retColisao.height
-        };
+            float deslocamentoX = j->olhandoParaDireita
+                ? qa->deslocamentoDesenho.x + qa->retColisao.x
+                : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
+            float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
 
-        if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
-            if ( retColCalculado.y + retColCalculado.height / 2 < o->ret.y + o->ret.height / 2 ) {
-                j->ret.y = o->ret.y - qa->retColisao.height - deslocamentoY;
-                j->quantidadePulos = 0;
-            } else {
-                j->ret.y = o->ret.y + o->ret.height - deslocamentoY;
+            Rectangle retColCalculado = {
+                j->ret.x + deslocamentoX,
+                j->ret.y + deslocamentoY,
+                qa->retColisao.width,
+                qa->retColisao.height
+            };
+
+            if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
+                if ( retColCalculado.y + retColCalculado.height / 2 < o->ret.y + o->ret.height / 2 ) {
+                    j->ret.y = o->ret.y - qa->retColisao.height - deslocamentoY;
+                    j->quantidadePulos = 0;
+                } else {
+                    j->ret.y = o->ret.y + o->ret.height - deslocamentoY;
+                }
+                j->vel.y = 0;
             }
-            j->vel.y = 0;
+
         }
 
         el = el->proximo;

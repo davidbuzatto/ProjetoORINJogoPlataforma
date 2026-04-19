@@ -10,6 +10,16 @@
 #include "Tipos.h"
 
 /**
+ * @brief Cria um novo item.
+ */
+Item *criarItem( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura );
+
+/**
+ * @brief Destroi um item.
+ */
+void destruirItem( Item *item );
+
+/**
  * @brief Desenha um item.
  */
 void desenharItem( Item *item );

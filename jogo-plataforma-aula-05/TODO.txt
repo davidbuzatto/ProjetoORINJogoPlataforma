@@ -1,0 +1,4 @@
+Criar um item de tipo fixo (anel)
+Generalizar itens;
+Criar um inimigo de tipo fixo (baseado na infraestrutura do item);
+Generalizar inimigos;

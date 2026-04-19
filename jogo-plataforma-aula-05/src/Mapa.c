@@ -10,6 +10,7 @@
 
 #include "raylib/raylib.h"
 
+#include "Macros.h"
 #include "Mapa.h"
 #include "Item.h"
 #include "Obstaculo.h"
@@ -42,8 +43,10 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
     // caractere até o fim
     while ( *caractereAtual != '\0' ) {
 
+        char c = *caractereAtual;
+
         // fim de linha?
-        if ( *caractereAtual == '\n' ) {
+        if ( c == '\n' ) {
 
             linhaAtual++;
             colunaAtual = 0;
@@ -52,30 +55,56 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
         } else {
 
-            bool criar = *caractereAtual != ' ';
-            int deslocamento = *caractereAtual - 'A';
-
-            if ( criar ) {
+            if ( c != ' ' ) {
 
                 ElementoMapa *el = (ElementoMapa*) malloc( sizeof( ElementoMapa ) );
 
-                el->obstaculo = (Obstaculo) {
-                    .ret = { 
-                        .x = novoMapa->tamanhoElemento * colunaAtual, 
-                        .y = novoMapa->tamanhoElemento * linhaAtual, 
-                        .width = novoMapa->tamanhoElemento, 
-                        .height = novoMapa->tamanhoElemento
-                    },
-                    .cor = GRAY,
-                    .fonte = { 
-                        1 + ( novoMapa->tamanhoElemento + 1 ) * deslocamento, 
-                        1, 
-                        novoMapa->tamanhoElemento,
-                        novoMapa->tamanhoElemento
-                    },
-                    .textura = &rm.texturaTerreno
-                };
-                el->tipoElemento = TIPO_ELEMENTO_MAPA_OBSTACULO;
+                if ( c >= 'A' && c <= 'Z' ) {
+
+                    int deslocamento = c - 'A';
+
+                    el->endereco = criarObstaculo( 
+                        (Rectangle) { 
+                            .x = novoMapa->tamanhoElemento * colunaAtual, 
+                            .y = novoMapa->tamanhoElemento * linhaAtual, 
+                            .width = novoMapa->tamanhoElemento, 
+                            .height = novoMapa->tamanhoElemento
+                        },
+                        GRAY,
+                        (Rectangle) { 
+                            1 + ( novoMapa->tamanhoElemento + 1 ) * deslocamento, 
+                            1, 
+                            novoMapa->tamanhoElemento,
+                            novoMapa->tamanhoElemento
+                        },
+                        &rm.texturaTerreno
+                    );
+
+                    el->tipo = TIPO_ELEMENTO_MAPA_OBSTACULO;
+
+                } else {
+
+                    el->endereco = criarItem( 
+                        (Rectangle) { 
+                            .x = novoMapa->tamanhoElemento * colunaAtual, 
+                            .y = novoMapa->tamanhoElemento * linhaAtual, 
+                            .width = 32, 
+                            .height = 32
+                        },
+                        YELLOW,
+                        (Rectangle) { 
+                            1, 
+                            1, 
+                            16,
+                            16
+                        },
+                        &rm.texturaItens
+                    );
+
+                    el->tipo = TIPO_ELEMENTO_MAPA_ITEM;
+
+                }
+
                 el->proximo = NULL;
 
                 // inserção na lista
@@ -118,9 +147,24 @@ void destruirMapa( Mapa *m ) {
     ElementoMapa *el = m->elementos;
 
     while ( el != NULL ) {
+
+        switch ( el->tipo ) {
+            case TIPO_ELEMENTO_MAPA_OBSTACULO:
+                destruirObstaculo( (Obstaculo*) el->endereco );
+                break;
+            case TIPO_ELEMENTO_MAPA_ITEM:
+                destruirItem( (Item*) el->endereco );
+                break;
+            case TIPO_ELEMENTO_MAPA_INIMIGO:
+                break;
+            default:
+                break;
+        }
+
         ElementoMapa *t = el;
         el = el->proximo;
         free( t );
+
     }
 
 }
@@ -134,23 +178,21 @@ void desenharMapa( Mapa *m ) {
 
     while ( el != NULL ) {
         
-        switch ( el->tipoElemento ) {
-            case TIPO_ELEMENTO_MAPA_OBSTACULO: {
-                Obstaculo *o = &el->obstaculo;
-                desenharObstaculo( o );
+        switch ( el->tipo ) {
+            case TIPO_ELEMENTO_MAPA_OBSTACULO:
+                desenharObstaculo( (Obstaculo*) el->endereco );
                 break;
-            }
-            case TIPO_ELEMENTO_MAPA_ITEM: {
-                Item *item = &el->item;
-                desenharItem( item );
+            case TIPO_ELEMENTO_MAPA_ITEM:
+                desenharItem( (Item*) el->endereco );
                 break;
-            }
-            case TIPO_ELEMENTO_MAPA_INIMIGO: {
+            case TIPO_ELEMENTO_MAPA_INIMIGO:
                 break;
-            }
+            default:
+                break;
         }
         
         el = el->proximo;
+
     }
 
 }

@@ -14,6 +14,29 @@
 #include "Tipos.h"
 
 /**
+ * @brief Cria um novo obstáculo.
+ */
+Obstaculo *criarObstaculo( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura ) {
+
+    Obstaculo *novoObstaculo = (Obstaculo*) malloc( sizeof( Obstaculo ) );
+
+    novoObstaculo->ret = ret;
+    novoObstaculo->cor = cor;
+    novoObstaculo->fonte = fonte;
+    novoObstaculo->textura = textura;
+
+    return novoObstaculo;
+
+}
+
+/**
+ * @brief Destroi um obstáculo.
+ */
+void destruirObstaculo( Obstaculo *o ) {
+    free( o );
+}
+
+/**
  * @brief Desenha um obstáculo.
  */
 void desenharObstaculo( Obstaculo *o ) {

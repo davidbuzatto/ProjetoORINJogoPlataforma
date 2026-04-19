@@ -92,7 +92,7 @@ typedef struct Jogador {
 } Jogador;
 
 /**
- * @brief Representa um obstáculo estático do cenário.
+ * @brief Representa um item estático do cenário.
  */
 typedef struct Item {
     Rectangle ret;
@@ -116,9 +116,8 @@ typedef struct Obstaculo {
  */
 typedef struct ElementoMapa ElementoMapa;
 struct ElementoMapa {
-    Obstaculo obstaculo;
-    Item item;
-    TipoElementoMapa tipoElemento;
+    void *endereco;
+    TipoElementoMapa tipo;
     ElementoMapa *proximo;
 };
 

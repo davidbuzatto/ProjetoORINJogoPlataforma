@@ -14,6 +14,29 @@
 #include "Tipos.h"
 
 /**
+ * @brief Cria um novo Item.
+ */
+Item *criarItem( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura ) {
+
+    Item *novoItem = (Item*) malloc( sizeof( Item ) );
+
+    novoItem->ret = ret;
+    novoItem->cor = cor;
+    novoItem->fonte = fonte;
+    novoItem->textura = textura;
+
+    return novoItem;
+
+}
+
+/**
+ * @brief Destroi um item.
+ */
+void destruirItem( Item *item ) {
+    free( item );
+}
+
+/**
  * @brief Desenha um item.
  */
 void desenharItem( Item *item ) {

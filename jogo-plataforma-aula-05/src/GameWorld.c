@@ -10,6 +10,7 @@
 
 #include "GameWorld.h"
 #include "Jogador.h"
+#include "Macros.h"
 #include "Mapa.h"
 #include "Obstaculo.h"
 #include "Tipos.h"
@@ -65,7 +66,6 @@ void updateGameWorld( GameWorld *gw, float delta ) {
     Jogador *j = gw->jogador;
     entradaJogador( j, delta );
     atualizarJogador( j, gw, delta );
-
     atualizarCamera( gw );
 
 }
