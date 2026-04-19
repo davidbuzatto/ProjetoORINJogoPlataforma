@@ -76,7 +76,7 @@ void updateGameWorld( GameWorld *gw, float delta ) {
 void drawGameWorld( GameWorld *gw ) {
 
     BeginDrawing();
-    ClearBackground( (Color) { 9, 157, 223, 225 } );
+    ClearBackground( (Color) { 36, 0, 180, 225 } );
 
     BeginMode2D( gw->camera );
     desenharFundo( gw );

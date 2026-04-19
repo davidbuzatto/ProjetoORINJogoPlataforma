@@ -24,7 +24,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
     Mapa *novoMapa = (Mapa*) malloc( sizeof( Mapa ) );
     novoMapa->elementos = NULL;
     novoMapa->quantidadeElementos = 0;
-    novoMapa->tamanhoElemento = 50;
+    novoMapa->tamanhoElemento = 48;
     novoMapa->linhas = 0;
     novoMapa->colunas = 0;
     
@@ -57,17 +57,6 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
             if ( criar ) {
 
-                // isso aqui vai embora na próxima iteração
-                Color cor = BLACK;
-                bool apenasCor = true;
-                switch ( *caractereAtual ) {
-                    case 'c': cor = GRAY; break;
-                    case 'r': cor = ORANGE; break;
-                    case 'g': cor = MAROON; break;
-                    case 'x': cor = GREEN;  break;
-                    default: apenasCor = false;
-                }
-
                 ElementoMapa *el = (ElementoMapa*) malloc( sizeof( ElementoMapa ) );
 
                 el->obstaculo = (Obstaculo) {
@@ -77,14 +66,14 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                         .width = novoMapa->tamanhoElemento, 
                         .height = novoMapa->tamanhoElemento
                     },
-                    .cor = cor,
+                    .cor = GRAY,
                     .fonte = { 
                         1 + ( novoMapa->tamanhoElemento + 1 ) * deslocamento, 
                         1, 
                         novoMapa->tamanhoElemento,
                         novoMapa->tamanhoElemento
                     },
-                    .textura = apenasCor ? NULL : &rm.texturaTerreno
+                    .textura = &rm.texturaTerreno
                 };
                 el->proximo = NULL;
 

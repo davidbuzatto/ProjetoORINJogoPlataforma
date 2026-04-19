@@ -1,16 +1,16 @@
-J                                                          M
+I                                                          L
 C                                                          E
-C                   Q                                      E
-C                  Q                                       E
-C                 Q                                        E
-C                Q                                         E
-C               Q           MBJ                            E
-C         Q    Q           MGAFJ                           E
-C          Q        Q   MBBGAAAFBBJ                        E
-C           Q      Q    LDDDDDDDDDK    NOOOOOOOOOOP        E
-C            Q    Q                                        E
-C                Q                                         E
-C               Q                                          E
+C                   M                                      E
+C                  M                                       E
+C                 M                                        E
+C                M                                         E
+C               M           LBI                            E
+C         M    M           LGAFI                           E
+C          M        M   LBBGAAAFBBI    LBBBBBBBBBBI        E
+C           M      M    KDDDDDDDDDJ    KDDDDDDDDDDJ        E
+C            M    M                                        E
+C                M                                         E
+C               M                                          E
 C                                                          E
 C                                                          E
 FBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBG
