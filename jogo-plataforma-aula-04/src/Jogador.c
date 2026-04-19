@@ -47,11 +47,11 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->velPulo = -550;
     novoJogador->velMaxQueda = 600;
 
-    novoJogador->aceleracao = 200;
-    novoJogador->desaceleracao = 400;
+    novoJogador->aceleracao = 400;
+    novoJogador->desaceleracao = 600;
 
     novoJogador->quantidadePulos = 0;
-    novoJogador->quantidadeMaxPulos = 2;
+    novoJogador->quantidadeMaxPulos = 1;
 
     novoJogador->estado = ESTADO_JOGADOR_PARADO;
     novoJogador->olhandoParaDireita = true;
@@ -215,7 +215,9 @@ void inputJogador( Jogador *j, float delta ) {
     }
 
     float absVelX = fabsf( j->vel.x );
-    if ( absVelX < 1.0f ) {
+    if ( j->quantidadePulos > 0 ) {
+        j->estado = ESTADO_JOGADOR_PULANDO;
+    } else if ( absVelX < 1.0f ) {
         j->estado = ESTADO_JOGADOR_PARADO;
     } else if ( absVelX <= j->velAndando ) {
         j->estado = ESTADO_JOGADOR_ANDANDO;
