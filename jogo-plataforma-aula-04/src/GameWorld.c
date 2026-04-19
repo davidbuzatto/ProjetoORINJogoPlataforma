@@ -21,8 +21,8 @@
 //#include "raylib/raygui.h"       // other compilation units must only include
 //#undef RAYGUI_IMPLEMENTATION     // raygui.h
 
-static void drawFundo( GameWorld *gw );
-static void updateCamera( GameWorld *gw );
+static void desenharFundo( GameWorld *gw );
+static void atualizarCamera( GameWorld *gw );
 
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
@@ -33,7 +33,7 @@ GameWorld* createGameWorld( void ) {
 
     //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
     gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
-    gw->jogador = createJogador( GetScreenWidth() / 2, getAlturaMapa( gw->mapa ) - 196, 96, 96 );
+    gw->jogador = criarJogador( GetScreenWidth() / 2, getAlturaMapa( gw->mapa ) - 196, 96, 96 );
 
     gw->camera = (Camera2D) {
         .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo
@@ -52,8 +52,8 @@ GameWorld* createGameWorld( void ) {
  * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw ) {
-    destroyMapa( gw->mapa );
-    destroyJogador( gw->jogador );
+    destruirMapa( gw->mapa );
+    destruirJogador( gw->jogador );
     free( gw );
 }
 
@@ -63,10 +63,10 @@ void destroyGameWorld( GameWorld *gw ) {
 void updateGameWorld( GameWorld *gw, float delta ) {
 
     Jogador *j = gw->jogador;
-    inputJogador( j, delta );
-    updateJogador( j, gw, delta );
+    entradaJogador( j, delta );
+    atualizarJogador( j, gw, delta );
 
-    updateCamera( gw );
+    atualizarCamera( gw );
 
 }
 
@@ -79,9 +79,9 @@ void drawGameWorld( GameWorld *gw ) {
     ClearBackground( (Color) { 9, 157, 223, 225 } );
 
     BeginMode2D( gw->camera );
-    drawFundo( gw );
-    drawMapa( gw->mapa );
-    drawJogador( gw->jogador );
+    desenharFundo( gw );
+    desenharMapa( gw->mapa );
+    desenharJogador( gw->jogador );
     EndMode2D();
 
     DrawFPS( 10, 10 );
@@ -90,7 +90,7 @@ void drawGameWorld( GameWorld *gw ) {
 
 }
 
-static void drawFundo( GameWorld *gw ) {
+static void desenharFundo( GameWorld *gw ) {
 
     int larguraFundo = rm.texturaFundo.width;
     int larguraMapa = getLarguraMapa( gw->mapa );
@@ -105,7 +105,7 @@ static void drawFundo( GameWorld *gw ) {
 
 }
 
-static void updateCamera( GameWorld *gw ) {
+static void atualizarCamera( GameWorld *gw ) {
 
     Jogador *j = gw->jogador;
     Camera2D *c = &gw->camera;

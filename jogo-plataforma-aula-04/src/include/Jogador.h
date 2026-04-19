@@ -12,24 +12,24 @@
 /**
  * @brief Cria uma instância alocada dinamicamente da struct Jogador.
  */
-Jogador *createJogador( float x, float y, float w, float h );
+Jogador *criarJogador( float x, float y, float w, float h );
 
 /**
  * @brief Destrói um objeto Jogador e libera seus recursos.
  */
-void destroyJogador( Jogador *j );
+void destruirJogador( Jogador *j );
 
 /**
  * @brief Lê a entrada do usuário e atualiza as velocidades do jogador.
  */
-void inputJogador( Jogador *j, float delta );
+void entradaJogador( Jogador *j, float delta );
 
 /**
  * @brief Aplica física e resolve colisões do jogador com o mundo.
  */
-void updateJogador( Jogador *j, GameWorld *gw, float delta );
+void atualizarJogador( Jogador *j, GameWorld *gw, float delta );
 
 /**
  * @brief Desenha o jogador.
  */
-void drawJogador( Jogador *j );
+void desenharJogador( Jogador *j );

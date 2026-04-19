@@ -123,7 +123,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 /**
  * @brief Destroi um mapa.
  */
-void destroyMapa( Mapa *m ) {
+void destruirMapa( Mapa *m ) {
 
     ElementoMapa *el = m->elementos;
 
@@ -138,13 +138,13 @@ void destroyMapa( Mapa *m ) {
 /**
  * @brief Desenha um mapa.
  */
-void drawMapa( Mapa *m ) {
+void desenharMapa( Mapa *m ) {
 
     ElementoMapa *el = m->elementos;
 
     while ( el != NULL ) {
         Obstaculo *o = &el->obstaculo;
-        drawObstaculo( o );
+        desenharObstaculo( o );
         el = el->proximo;
     }
 

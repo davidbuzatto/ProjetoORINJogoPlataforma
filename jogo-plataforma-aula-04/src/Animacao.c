@@ -10,11 +10,11 @@
 #include "Animacao.h"
 #include "Tipos.h"
 
-void createQuadrosAnimacao( Animacao *anim, int quantidadeQuadros ) {
+void criarQuadrosAnimacao( Animacao *anim, int quantidadeQuadros ) {
     anim->quadros = (QuadroAnimacao*) malloc( sizeof( QuadroAnimacao ) * quantidadeQuadros );
 }
 
-void initQuadrosAnimacao( 
+void inicializarQuadrosAnimacao( 
     QuadroAnimacao *quadros,
     int quantidadeQuadros,
     int duracaoPadrao,
@@ -50,11 +50,11 @@ void initQuadrosAnimacao(
 
 }
 
-void destroyQuadrosAnimacao( Animacao *anim ) {
+void destruirQuadrosAnimacao( Animacao *anim ) {
     free( anim->quadros );
 }
 
-void updateAnimacao( Animacao *anim, float delta ) {
+void atualizarAnimacao( Animacao *anim, float delta ) {
 
     if ( anim->finalizada ) {
         return;

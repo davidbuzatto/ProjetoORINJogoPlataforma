@@ -9,8 +9,8 @@
 
 #include "Tipos.h"
 
-void createQuadrosAnimacao( Animacao *anim, int quantidadeQuadros );
-void initQuadrosAnimacao( 
+void criarQuadrosAnimacao( Animacao *anim, int quantidadeQuadros );
+void inicializarQuadrosAnimacao( 
     QuadroAnimacao *quadros,
     int quantidadeQuadros,
     int duracaoPadrao,
@@ -24,8 +24,8 @@ void initQuadrosAnimacao(
     bool deTrasParaFrente,
     Rectangle retColisaoPadrao
 );
-void destroyQuadrosAnimacao( Animacao *anim );
-void updateAnimacao( Animacao *anim, float delta );
+void destruirQuadrosAnimacao( Animacao *anim );
+void atualizarAnimacao( Animacao *anim, float delta );
 
 int getNumeroQuadroAtualAnimacao( Animacao *anim );
 QuadroAnimacao *getQuadroAtualAnimacao( Animacao *anim );

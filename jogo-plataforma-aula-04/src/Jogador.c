@@ -17,19 +17,19 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void drawQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
 static QuadroAnimacao *getQuadroAnimacaoAtualJogador( Jogador *j );
 static Animacao *getAnimacaoAtualJogador( Jogador *j );
 
 static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa );
 static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa );
 
-static const bool MOSTRAR_RETANGULOS = true;
+static const bool MOSTRAR_RETANGULOS = false;
 
 /**
  * @brief Cria uma instância alocada dinamicamente da struct Jogador.
  */
-Jogador *createJogador( float x, float y, float w, float h ) {
+Jogador *criarJogador( float x, float y, float w, float h ) {
 
     Jogador *novoJogador = (Jogador*) malloc( sizeof( Jogador ) );
 
@@ -65,8 +65,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoParado.pararNoUltimoQuadro = false;
     novoJogador->animacaoParado.executarUmaVez = false;
     novoJogador->animacaoParado.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoParado, novoJogador->animacaoParado.quantidadeQuadros );
-    initQuadrosAnimacao( 
+    criarQuadrosAnimacao( &novoJogador->animacaoParado, novoJogador->animacaoParado.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
         novoJogador->animacaoParado.quadros,
         novoJogador->animacaoParado.quantidadeQuadros,
         1000,            // duração padrão para todos os quadros
@@ -86,8 +86,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoAndando.pararNoUltimoQuadro = false;
     novoJogador->animacaoAndando.executarUmaVez = false;
     novoJogador->animacaoAndando.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoAndando, novoJogador->animacaoAndando.quantidadeQuadros );
-    initQuadrosAnimacao( 
+    criarQuadrosAnimacao( &novoJogador->animacaoAndando, novoJogador->animacaoAndando.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
         novoJogador->animacaoAndando.quadros,
         novoJogador->animacaoAndando.quantidadeQuadros,
         80,              // duração padrão para cada quadro
@@ -107,8 +107,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoAndandoRapido.pararNoUltimoQuadro = false;
     novoJogador->animacaoAndandoRapido.executarUmaVez = false;
     novoJogador->animacaoAndandoRapido.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoAndandoRapido, novoJogador->animacaoAndandoRapido.quantidadeQuadros );
-    initQuadrosAnimacao( 
+    criarQuadrosAnimacao( &novoJogador->animacaoAndandoRapido, novoJogador->animacaoAndandoRapido.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
         novoJogador->animacaoAndandoRapido.quadros,
         novoJogador->animacaoAndandoRapido.quantidadeQuadros,
         40,              // duração padrão para cada quadro
@@ -128,8 +128,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoCorrendo.pararNoUltimoQuadro = false;
     novoJogador->animacaoCorrendo.executarUmaVez = false;
     novoJogador->animacaoCorrendo.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoCorrendo, novoJogador->animacaoCorrendo.quantidadeQuadros );
-    initQuadrosAnimacao( 
+    criarQuadrosAnimacao( &novoJogador->animacaoCorrendo, novoJogador->animacaoCorrendo.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
         novoJogador->animacaoCorrendo.quadros,
         novoJogador->animacaoCorrendo.quantidadeQuadros,
         20,              // duração padrão para cada quadro
@@ -149,8 +149,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoPulando.pararNoUltimoQuadro = false;
     novoJogador->animacaoPulando.executarUmaVez = false;
     novoJogador->animacaoPulando.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoPulando, novoJogador->animacaoPulando.quantidadeQuadros );
-    initQuadrosAnimacao( 
+    criarQuadrosAnimacao( &novoJogador->animacaoPulando, novoJogador->animacaoPulando.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
         novoJogador->animacaoPulando.quadros,
         novoJogador->animacaoPulando.quantidadeQuadros,
         40,              // duração padrão para cada quadro
@@ -170,8 +170,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoPulandoRapido.pararNoUltimoQuadro = false;
     novoJogador->animacaoPulandoRapido.executarUmaVez = false;
     novoJogador->animacaoPulandoRapido.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoPulandoRapido, novoJogador->animacaoPulandoRapido.quantidadeQuadros );
-    initQuadrosAnimacao(
+    criarQuadrosAnimacao( &novoJogador->animacaoPulandoRapido, novoJogador->animacaoPulandoRapido.quantidadeQuadros );
+    inicializarQuadrosAnimacao(
         novoJogador->animacaoPulandoRapido.quadros,
         novoJogador->animacaoPulandoRapido.quantidadeQuadros,
         25,              // duração padrão para cada quadro
@@ -191,8 +191,8 @@ Jogador *createJogador( float x, float y, float w, float h ) {
     novoJogador->animacaoPulandoCorrendo.pararNoUltimoQuadro = false;
     novoJogador->animacaoPulandoCorrendo.executarUmaVez = false;
     novoJogador->animacaoPulandoCorrendo.finalizada = false;
-    createQuadrosAnimacao( &novoJogador->animacaoPulandoCorrendo, novoJogador->animacaoPulandoCorrendo.quantidadeQuadros );
-    initQuadrosAnimacao(
+    criarQuadrosAnimacao( &novoJogador->animacaoPulandoCorrendo, novoJogador->animacaoPulandoCorrendo.quantidadeQuadros );
+    inicializarQuadrosAnimacao(
         novoJogador->animacaoPulandoCorrendo.quadros,
         novoJogador->animacaoPulandoCorrendo.quantidadeQuadros,
         15,              // duração padrão para cada quadro
@@ -222,7 +222,7 @@ Jogador *createJogador( float x, float y, float w, float h ) {
 /**
  * @brief Destrói um objeto Jogador e libera seus recursos.
  */
-void destroyJogador( Jogador *j ) {
+void destruirJogador( Jogador *j ) {
     if ( j != NULL ) {
         free( j );
     }
@@ -231,7 +231,7 @@ void destroyJogador( Jogador *j ) {
 /**
  * @brief Lê a entrada do usuário e atualiza as velocidades do jogador.
  */
-void inputJogador( Jogador *j, float delta ) {
+void entradaJogador( Jogador *j, float delta ) {
 
     if ( IsKeyDown( KEY_RIGHT ) ) {
         if ( j->vel.x < 0 ) {
@@ -294,10 +294,10 @@ void inputJogador( Jogador *j, float delta ) {
 /**
  * @brief Aplica física e resolve colisões do jogador com o mundo.
  */
-void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
+void atualizarJogador( Jogador *j, GameWorld *gw, float delta ) {
 
     Animacao *animacaoAtual = getAnimacaoAtualJogador( j );
-    updateAnimacao( animacaoAtual, delta );
+    atualizarAnimacao( animacaoAtual, delta );
 
     // fase X: move horizontalmente e resolve colisões laterais
     j->ret.x += j->vel.x * delta;
@@ -316,9 +316,9 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
 /**
  * @brief Desenha o jogador.
  */
-void drawJogador( Jogador *j ) {
+void desenharJogador( Jogador *j ) {
     QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
-    drawQuadroAnimacaoJogador( j, qa, (Vector2) { 0 }, WHITE );
+    desenharQuadroAnimacaoJogador( j, qa, (Vector2) { 0 }, WHITE );
     if ( MOSTRAR_RETANGULOS ) {
         DrawRectangleRec( j->ret, Fade( j->cor, 0.5f ) );
         DrawRectangleLines( j->ret.x, j->ret.y, j->ret.width, j->ret.height, BLACK );
@@ -334,7 +334,7 @@ void reiniciarAnimacoesJogador( Jogador *j ) {
     }
 }
 
-static void drawQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
 
     if ( qa != NULL ) {
 
@@ -374,10 +374,7 @@ static QuadroAnimacao *getQuadroAnimacaoAtualJogador( Jogador *j ) {
 }
 
 static Animacao *getAnimacaoAtualJogador( Jogador *j ) {
-    switch ( j->estado ) {
-        default:
-            return j->animacoes[j->estado];
-    }
+    return j->animacoes[j->estado];
 }
 
 /**
