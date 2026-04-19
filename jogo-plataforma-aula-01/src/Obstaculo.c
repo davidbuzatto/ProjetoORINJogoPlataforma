@@ -16,15 +16,15 @@
 /**
  * @brief Desenha um obstáculo.
  */
-void drawObstaculo( Obstaculo *o ) {
+void desenharObstaculo( Obstaculo *o ) {
     DrawRectangleRec( o->ret, o->cor );
 }
 
 /**
  * @brief Desenha todos os obstáculos.
  */
-void drawObstaculos( Obstaculo *obstaculos, int quantidade ) {
+void desenharObstaculos( Obstaculo *obstaculos, int quantidade ) {
     for ( int i = 0; i < quantidade; i++ ) {
-        drawObstaculo( &obstaculos[i] );
+        desenharObstaculo( &obstaculos[i] );
     }
 }

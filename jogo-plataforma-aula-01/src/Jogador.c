@@ -21,7 +21,7 @@ static void resolverColisaoJogadorCenarioY( Jogador *j, float chaoY );
 /**
  * @brief Cria uma instância alocada dinamicamente da struct Jogador.
  */
-Jogador *createJogador( float x, float y, float w, float h ) {
+Jogador *criarJogador( float x, float y, float w, float h ) {
 
     Jogador *novoJogador = (Jogador*) malloc( sizeof( Jogador ) );
 
@@ -45,7 +45,7 @@ Jogador *createJogador( float x, float y, float w, float h ) {
 /**
  * @brief Destrói um objeto Jogador e libera seus recursos.
  */
-void destroyJogador( Jogador *j ) {
+void destruirJogador( Jogador *j ) {
     if ( j != NULL ) {
         free( j );
     }
@@ -54,7 +54,7 @@ void destroyJogador( Jogador *j ) {
 /**
  * @brief Lê a entrada do usuário e atualiza as velocidades do jogador.
  */
-void inputJogador( Jogador *j ) {
+void entradaJogador( Jogador *j ) {
 
     if ( IsKeyDown( KEY_LEFT ) ) {
         j->vel.x = -j->velAndando;
@@ -77,7 +77,7 @@ void inputJogador( Jogador *j ) {
 /**
  * @brief Aplica física e resolve colisões do jogador com o mundo.
  */
-void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
+void atualizarJogador( Jogador *j, GameWorld *gw, float delta ) {
 
     // fase X: move horizontalmente e resolve colisões laterais
     j->ret.x += j->vel.x * delta;
@@ -98,7 +98,7 @@ void updateJogador( Jogador *j, GameWorld *gw, float delta ) {
 /**
  * @brief Desenha o jogador.
  */
-void drawJogador( Jogador *j ) {
+void desenharJogador( Jogador *j ) {
     DrawRectangleRec( j->ret, j->cor );
 }
 

@@ -1,16 +1,13 @@
-Aula 04:
-    Animações;
-    Estados;
-    
 Aula 05:
+    Itens;
     Inimigos;
     Colisão Inimigos X Cenário;
     Colisão Inimigos X Jogador;
-    Vidas;
-    Reset.
     
 Aula 06:
-    Fases;
+    Sons;
+    Vidas;
+    Reset.
 
 Aula 07:
-    Sons
+    Fases;

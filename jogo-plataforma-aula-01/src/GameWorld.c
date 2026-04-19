@@ -49,7 +49,7 @@ GameWorld* createGameWorld( void ) {
  * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw ) {
-    destroyJogador( gw->jogador );
+    destruirJogador( gw->jogador );
     free( gw );
 }
 
@@ -60,8 +60,8 @@ void updateGameWorld( GameWorld *gw, float delta ) {
 
     Jogador *j = gw->jogador;
 
-    inputJogador( j );
-    updateJogador( j, gw, delta );
+    entradaJogador( j );
+    atualizarJogador( j, gw, delta );
 
 }
 
@@ -74,8 +74,8 @@ void drawGameWorld( GameWorld *gw ) {
     ClearBackground( WHITE );
 
     DrawRectangleRec( gw->chao, GREEN );
-    drawObstaculos( gw->obstaculos, gw->quantidadeObstaculos );
-    drawJogador( gw->jogador );
+    desenharObstaculos( gw->obstaculos, gw->quantidadeObstaculos );
+    desenharJogador( gw->jogador );
 
     EndDrawing();
 
