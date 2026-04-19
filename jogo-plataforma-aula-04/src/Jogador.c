@@ -49,6 +49,7 @@ Jogador *createJogador( float x, float y, float w, float h ) {
 
     novoJogador->aceleracao = 400;
     novoJogador->desaceleracao = 600;
+    novoJogador->frenagem = 1800;
 
     novoJogador->quantidadePulos = 0;
     novoJogador->quantidadeMaxPulos = 1;
@@ -189,15 +190,21 @@ void destroyJogador( Jogador *j ) {
 void inputJogador( Jogador *j, float delta ) {
 
     if ( IsKeyDown( KEY_RIGHT ) ) {
-        j->vel.x += j->aceleracao * delta;
-        if ( j->vel.x > j->velCorrendo ) {
-            j->vel.x = j->velCorrendo;
+        if ( j->vel.x < 0 ) {
+            j->vel.x += j->frenagem * delta;
+            if ( j->vel.x > 0 ) j->vel.x = 0;
+        } else {
+            j->vel.x += j->aceleracao * delta;
+            if ( j->vel.x > j->velCorrendo ) j->vel.x = j->velCorrendo;
         }
         j->olhandoParaDireita = true;
     } else if ( IsKeyDown( KEY_LEFT ) ) {
-        j->vel.x -= j->aceleracao * delta;
-        if ( j->vel.x < -j->velCorrendo ) {
-            j->vel.x = -j->velCorrendo;
+        if ( j->vel.x > 0 ) {
+            j->vel.x -= j->frenagem * delta;
+            if ( j->vel.x < 0 ) j->vel.x = 0;
+        } else {
+            j->vel.x -= j->aceleracao * delta;
+            if ( j->vel.x < -j->velCorrendo ) j->vel.x = -j->velCorrendo;
         }
         j->olhandoParaDireita = false;
     } else {
