@@ -32,7 +32,7 @@ GameWorld* createGameWorld( void ) {
 
     //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
     gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
-    gw->jogador = createJogador( GetScreenWidth() / 2, getAlturaMapa( gw->mapa ) - 150, 50, 50 );
+    gw->jogador = criarJogador( GetScreenWidth() / 2, calcularAlturaMapa( gw->mapa ) - 150, 50, 50 );
 
     gw->camera = (Camera2D) {
         .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo
@@ -51,8 +51,8 @@ GameWorld* createGameWorld( void ) {
  * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw ) {
-    destroyMapa( gw->mapa );
-    destroyJogador( gw->jogador );
+    destruirMapa( gw->mapa );
+    destruirJogador( gw->jogador );
     free( gw );
 }
 
@@ -62,8 +62,8 @@ void destroyGameWorld( GameWorld *gw ) {
 void updateGameWorld( GameWorld *gw, float delta ) {
 
     Jogador *j = gw->jogador;
-    inputJogador( j );
-    updateJogador( j, gw, delta );
+    entradaJogador( j );
+    atualizarJogador( j, gw, delta );
 
     updateCamera( gw );
 
@@ -78,8 +78,8 @@ void drawGameWorld( GameWorld *gw ) {
     ClearBackground( WHITE );
 
     BeginMode2D( gw->camera );
-    drawMapa( gw->mapa );
-    drawJogador( gw->jogador );
+    desenharMapa( gw->mapa );
+    desenharJogador( gw->jogador );
     EndMode2D();
 
     DrawFPS( 10, 10 );
@@ -100,8 +100,8 @@ static void updateCamera( GameWorld *gw ) {
     c->target.y = j->ret.y + j->ret.height / 2;
 
     int minX = GetScreenWidth() / 2;
-    int maxX = getLarguraMapa( gw->mapa ) - GetScreenWidth() / 2;
-    int maxY = getAlturaMapa( gw->mapa ) - GetScreenHeight() / 2;
+    int maxX = calcularLarguraMapa( gw->mapa ) - GetScreenWidth() / 2;
+    int maxY = calcularAlturaMapa( gw->mapa ) - GetScreenHeight() / 2;
 
     if ( c->target.x < minX ) {
         c->target.x = minX;

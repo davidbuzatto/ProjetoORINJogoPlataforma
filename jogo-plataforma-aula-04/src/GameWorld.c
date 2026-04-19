@@ -31,9 +31,9 @@ GameWorld* createGameWorld( void ) {
 
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
 
-    //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
-    gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
-    gw->jogador = criarJogador( GetScreenWidth() / 2, getAlturaMapa( gw->mapa ) - 196, 96, 96 );
+    gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
+    //gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
+    gw->jogador = criarJogador( GetScreenWidth() / 2, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
 
     gw->camera = (Camera2D) {
         .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo
@@ -93,8 +93,8 @@ void drawGameWorld( GameWorld *gw ) {
 static void desenharFundo( GameWorld *gw ) {
 
     int larguraFundo = rm.texturaFundo.width;
-    int larguraMapa = getLarguraMapa( gw->mapa );
-    int alturaMapa = getAlturaMapa( gw->mapa );
+    int larguraMapa = calcularLarguraMapa( gw->mapa );
+    int alturaMapa = calcularAlturaMapa( gw->mapa );
     int repeticoes = larguraMapa / larguraFundo;
 
     int deslocamentoParallax = (int) ( ( gw->camera.target.x / (float) larguraMapa ) * 200 );
@@ -117,8 +117,8 @@ static void atualizarCamera( GameWorld *gw ) {
     c->target.y = j->ret.y + j->ret.height / 2;
 
     int minX = GetScreenWidth() / 2;
-    int maxX = getLarguraMapa( gw->mapa ) - GetScreenWidth() / 2;
-    int maxY = getAlturaMapa( gw->mapa ) - GetScreenHeight() / 2;
+    int maxX = calcularLarguraMapa( gw->mapa ) - GetScreenWidth() / 2;
+    int maxY = calcularAlturaMapa( gw->mapa ) - GetScreenHeight() / 2;
 
     if ( c->target.x < minX ) {
         c->target.x = minX;

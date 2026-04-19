@@ -12,9 +12,9 @@
 /**
  * @brief Desenha um obstáculo.
  */
-void drawObstaculo( Obstaculo *o );
+void desenharObstaculo( Obstaculo *o );
 
 /**
  * @brief Desenha todos os obstáculos.
  */
-void drawObstaculos( Obstaculo *obstaculos, int quantidade );
+void desenharObstaculos( Obstaculo *obstaculos, int quantidade );

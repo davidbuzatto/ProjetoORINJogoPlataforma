@@ -1,9 +1,9 @@
-x              x
-x     r        x
-x      r       x
-x       r     rx
-x        r   r x
-x           r  x
-x          r   x
-x         r    x
-xxxxxxxxxxxxxxxx
+I               L
+C     M         E
+C      M        E
+C       M      ME
+C        M    M E
+C            M  E
+C           M   E
+C          M    E
+FBBBBBBBBBBBBBBBG

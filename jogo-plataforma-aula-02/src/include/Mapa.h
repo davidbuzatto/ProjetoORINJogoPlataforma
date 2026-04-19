@@ -17,19 +17,19 @@ Mapa *carregarMapa( const char *caminhoArquivo );
 /**
  * @brief Destroi um mapa.
  */
-void destroyMapa( Mapa *m );
+void destruirMapa( Mapa *m );
 
 /**
  * @brief Desenha um mapa.
  */
-void drawMapa( Mapa *m );
+void desenharMapa( Mapa *m );
 
 /**
  * @brief Calcula a largura do mapa.
  */
-int getLarguraMapa( Mapa *m );
+int calcularLarguraMapa( Mapa *m );
 
 /**
  * @brief Calcula a altura do mapa.
  */
-int getAlturaMapa( Mapa *m );
+int calcularAlturaMapa( Mapa *m );

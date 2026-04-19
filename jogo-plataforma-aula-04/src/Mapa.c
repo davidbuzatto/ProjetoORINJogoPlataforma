@@ -51,7 +51,6 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
         } else {
 
-            // aqui decidimos se vamos ou não criar um novo elemento
             bool criar = *caractereAtual != ' ';
             int deslocamento = *caractereAtual - 'A';
 
@@ -142,13 +141,13 @@ void desenharMapa( Mapa *m ) {
 /**
  * @brief Calcula a largura do mapa.
  */
-int getLarguraMapa( Mapa *m ) {
+int calcularLarguraMapa( Mapa *m ) {
     return (int) ( m->tamanhoElemento * m->colunas );
 }
 
 /**
  * @brief Calcula a altura do mapa.
  */
-int getAlturaMapa( Mapa *m ) {
+int calcularAlturaMapa( Mapa *m ) {
     return (int) ( m->tamanhoElemento * m->linhas );
 }
