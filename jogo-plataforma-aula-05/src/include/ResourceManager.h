@@ -10,9 +10,14 @@
 #include "raylib/raylib.h"
 
 typedef struct ResourceManager {
+
     Texture2D texturaJogador;
+    Texture2D texturaBadniks;
+    Texture2D texturaItens;
+
     Texture2D texturaTerreno;
     Texture2D texturaFundo;
+
 } ResourceManager;
 
 /**

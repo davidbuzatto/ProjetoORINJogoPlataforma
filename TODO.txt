@@ -1,14 +1,16 @@
 Aula 05:
     Itens;
     Colisão Jogador + Itens;
+    
     Inimigos;
     Colisão Inimigos X Cenário;
     Colisão Inimigos X Jogador;
     
 Aula 06:
-    Sons;
     Vidas;
+    Sons;
+    Hud;
     Reset.
 
-Aula 07:
+Aula 07 ????
     Fases;

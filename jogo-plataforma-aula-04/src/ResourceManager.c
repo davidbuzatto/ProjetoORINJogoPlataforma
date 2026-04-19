@@ -20,12 +20,14 @@ void loadResourcesResourceManager( void ) {
     rm.texturaJogador = carregarTexturaAlterandoCores( 
         "resources/imagens/sprites/sonic.png",
         (Color[]) {
+            { 37, 102, 26, 255 },
             { 13, 72, 7, 255 },
         },
         (Color[]) {
             BLANK,
+            BLANK,
         },
-        1
+        2
     );
 
     rm.texturaTerreno = LoadTexture( "resources/imagens/tiles/terreno.png" );

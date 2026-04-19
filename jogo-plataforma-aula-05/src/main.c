@@ -15,19 +15,19 @@
 int main( void ) {
 
     GameWindow *gameWindow = createGameWindow(
-        800,                  // width
-        450,                  // height
-        "Jogo de Plataforma", // title
-        60,                   // target FPS
-        false,                // antialiasing
-        false,                // resizable
-        false,                // full screen
-        false,                // undecorated
-        false,                // always on top
-        false,                // invisible background
-        false,                // always run
-        true,                 // load resources
-        false                 // init audio
+        800,             // width
+        450,             // height
+        "Jogo de Sônio", // title
+        60,              // target FPS
+        false,           // antialiasing
+        false,           // resizable
+        false,           // full screen
+        false,           // undecorated
+        false,           // always on top
+        false,           // invisible background
+        false,           // always run
+        true,            // load resources
+        false            // init audio
     );
 
     initGameWindow( gameWindow );

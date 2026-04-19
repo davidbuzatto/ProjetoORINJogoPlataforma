@@ -1,3 +1,0 @@
-Mudar animação para o estado de pular da forma correta;
-Acelerar enquanto segura para direita ou esquerda e mudar o estado apropriadamente;
-Ajustar as funções de colisão para responder ao retângulo de colisão.
