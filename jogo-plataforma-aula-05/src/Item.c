@@ -11,19 +11,17 @@
 #include "raylib/raylib.h"
 
 #include "Item.h"
+#include "ItemAnel.h"
 #include "Tipos.h"
 
 /**
  * @brief Cria um novo Item.
  */
-Item *criarItem( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura ) {
+Item *criarItem( TipoItem tipo ) {
 
     Item *novoItem = (Item*) malloc( sizeof( Item ) );
-
-    novoItem->ret = ret;
-    novoItem->cor = cor;
-    novoItem->fonte = fonte;
-    novoItem->textura = textura;
+    novoItem->objeto = NULL;
+    novoItem->tipo = tipo;
 
     return novoItem;
 
@@ -33,7 +31,29 @@ Item *criarItem( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura )
  * @brief Destroi um item.
  */
 void destruirItem( Item *item ) {
+    switch ( item->tipo ) {
+        case TIPO_ITEM_ANEL:
+            destruirItemAnel( (ItemAnel*) item->objeto );
+            break;
+        default:
+            break;
+    }
     free( item );
+}
+
+/**
+ * @brief Atualiza um item.
+ */
+void atualizarItem( Item *item, float delta ) {
+
+    switch ( item->tipo ) {
+        case TIPO_ITEM_ANEL:
+            atualizarItemAnel( (ItemAnel*) item->objeto, delta );
+            break;
+        default:
+            return;
+    }
+
 }
 
 /**
@@ -41,19 +61,12 @@ void destruirItem( Item *item ) {
  */
 void desenharItem( Item *item ) {
 
-    if ( item->textura == NULL ) {
-        DrawRectangleRec( item->ret, item->cor );
-        DrawRectangleLines( item->ret.x, item->ret.y, item->ret.width, item->ret.height, BLACK );
-        return;
+    switch ( item->tipo ) {
+        case TIPO_ITEM_ANEL:
+            desenharItemAnel( (ItemAnel*) item->objeto );
+            break;
+        default:
+            return;
     }
-
-    DrawTexturePro(
-        *item->textura, 
-        item->fonte,
-        item->ret,
-        (Vector2) { 0 },
-        0.0f,
-        WHITE
-    );
 
 }

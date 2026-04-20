@@ -64,6 +64,7 @@ void destroyGameWorld( GameWorld *gw ) {
 void updateGameWorld( GameWorld *gw, float delta ) {
 
     Jogador *j = gw->jogador;
+    atualizarMapa( gw->mapa, delta );
     entradaJogador( j, delta );
     atualizarJogador( j, gw, delta );
     atualizarCamera( gw );

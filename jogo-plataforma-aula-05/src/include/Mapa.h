@@ -20,6 +20,11 @@ Mapa *carregarMapa( const char *caminhoArquivo );
 void destruirMapa( Mapa *m );
 
 /**
+ * @brief Atualiza um mapa.
+ */
+void atualizarMapa( Mapa *m, float delta );
+
+/**
  * @brief Desenha um mapa.
  */
 void desenharMapa( Mapa *m );

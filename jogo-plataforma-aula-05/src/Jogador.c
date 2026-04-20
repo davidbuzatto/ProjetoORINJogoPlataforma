@@ -333,15 +333,6 @@ void desenharJogador( Jogador *j ) {
     }
 }
 
-/**
- * @brief Reinicia todas as animações do jogador.
- */
-void reiniciarAnimacoesJogador( Jogador *j ) {
-    for ( int i = 0; i < j->quantidadeAnimacoes; i++ ) {
-        reiniciarAnimacao( j->animacoes[i] );
-    }
-}
-
 static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
 
     if ( qa != NULL ) {
@@ -396,7 +387,7 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
         if ( el->tipo == TIPO_ELEMENTO_MAPA_OBSTACULO ) {
 
-            Obstaculo *o = (Obstaculo*) el->endereco;
+            Obstaculo *o = (Obstaculo*) el->objeto;
             QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
             float deslocamentoX = j->olhandoParaDireita
@@ -439,7 +430,7 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
 
         if ( el->tipo == TIPO_ELEMENTO_MAPA_OBSTACULO ) {
 
-            Obstaculo *o = (Obstaculo*) el->endereco;
+            Obstaculo *o = (Obstaculo*) el->objeto;
             QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
             float deslocamentoX = j->olhandoParaDireita

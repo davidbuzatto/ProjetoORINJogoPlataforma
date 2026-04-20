@@ -13,6 +13,7 @@
 #include "Macros.h"
 #include "Mapa.h"
 #include "Item.h"
+#include "ItemAnel.h"
 #include "Obstaculo.h"
 #include "Tipos.h"
 #include "ResourceManager.h"
@@ -63,7 +64,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
                     int deslocamento = c - 'A';
 
-                    el->endereco = criarObstaculo( 
+                    el->objeto = criarObstaculo( 
                         (Rectangle) { 
                             .x = novoMapa->tamanhoElemento * colunaAtual, 
                             .y = novoMapa->tamanhoElemento * linhaAtual, 
@@ -82,26 +83,34 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
                     el->tipo = TIPO_ELEMENTO_MAPA_OBSTACULO;
 
-                } else {
+                } else if ( c >= 'a' && c <= 'z' ) {
 
-                    el->endereco = criarItem( 
-                        (Rectangle) { 
-                            .x = novoMapa->tamanhoElemento * colunaAtual, 
-                            .y = novoMapa->tamanhoElemento * linhaAtual, 
-                            .width = 32, 
-                            .height = 32
-                        },
-                        YELLOW,
-                        (Rectangle) { 
-                            1, 
-                            1, 
-                            16,
-                            16
-                        },
-                        &rm.texturaItens
-                    );
+                    Item *item = NULL;
 
-                    el->tipo = TIPO_ELEMENTO_MAPA_ITEM;
+                    switch ( c ) {
+
+                        case 'a':
+
+                            item = criarItem( TIPO_ITEM_ANEL );
+
+                            item->objeto = criarItemAnel( 
+                                (Rectangle) { 
+                                    .x = novoMapa->tamanhoElemento * colunaAtual + 8, 
+                                    .y = novoMapa->tamanhoElemento * linhaAtual + 5, 
+                                    .width = 32, 
+                                    .height = 32
+                                },
+                                YELLOW
+                            );
+
+                            el->objeto = item;
+                            el->tipo = TIPO_ELEMENTO_MAPA_ITEM;
+
+                            break;
+                        default:
+                            TraceLog( LOG_ERROR, "Tipo de item desconhecido." );
+                            break;
+                    }
 
                 }
 
@@ -150,10 +159,10 @@ void destruirMapa( Mapa *m ) {
 
         switch ( el->tipo ) {
             case TIPO_ELEMENTO_MAPA_OBSTACULO:
-                destruirObstaculo( (Obstaculo*) el->endereco );
+                destruirObstaculo( (Obstaculo*) el->objeto );
                 break;
             case TIPO_ELEMENTO_MAPA_ITEM:
-                destruirItem( (Item*) el->endereco );
+                destruirItem( (Item*) el->objeto );
                 break;
             case TIPO_ELEMENTO_MAPA_INIMIGO:
                 break;
@@ -170,6 +179,31 @@ void destruirMapa( Mapa *m ) {
 }
 
 /**
+ * @brief Atualiza um mapa.
+ */
+void atualizarMapa( Mapa *m, float delta ) {
+
+    ElementoMapa *el = m->elementos;
+
+    while ( el != NULL ) {
+        
+        switch ( el->tipo ) {
+            case TIPO_ELEMENTO_MAPA_ITEM:
+                atualizarItem( (Item*) el->objeto, delta );
+                break;
+            case TIPO_ELEMENTO_MAPA_INIMIGO:
+                break;
+            default:
+                break;
+        }
+        
+        el = el->proximo;
+
+    }
+
+}
+
+/**
  * @brief Desenha um mapa.
  */
 void desenharMapa( Mapa *m ) {
@@ -180,10 +214,10 @@ void desenharMapa( Mapa *m ) {
         
         switch ( el->tipo ) {
             case TIPO_ELEMENTO_MAPA_OBSTACULO:
-                desenharObstaculo( (Obstaculo*) el->endereco );
+                desenharObstaculo( (Obstaculo*) el->objeto );
                 break;
             case TIPO_ELEMENTO_MAPA_ITEM:
-                desenharItem( (Item*) el->endereco );
+                desenharItem( (Item*) el->objeto );
                 break;
             case TIPO_ELEMENTO_MAPA_INIMIGO:
                 break;

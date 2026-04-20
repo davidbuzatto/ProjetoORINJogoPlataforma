@@ -1,0 +1,145 @@
+/**
+ * @file Item.c
+ * @author Prof. Dr. David Buzatto
+ * @brief Implementação do Item (Anel).
+ *
+ * @copyright Copyright (c) 2026
+ */
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "raylib/raylib.h"
+
+#include "Animacao.h"
+#include "ItemAnel.h"
+#include "ResourceManager.h"
+#include "Tipos.h"
+
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item );
+static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item );
+
+static const bool MOSTRAR_RETANGULOS = false;
+
+/**
+ * @brief Cria um novo Item (anel).
+ */
+ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
+
+    ItemAnel *novoItem = (ItemAnel*) malloc( sizeof( ItemAnel ) );
+
+    novoItem->ret = ret;
+    novoItem->cor = cor;
+
+    int quantidadeAnimacoes = 0;
+
+    novoItem->animacaoParado.quantidadeQuadros = 4;
+    novoItem->animacaoParado.quadroAtual = 0;
+    novoItem->animacaoParado.contadorTempoQuadro = 0.0f;
+    novoItem->animacaoParado.pararNoUltimoQuadro = false;
+    novoItem->animacaoParado.executarUmaVez = false;
+    novoItem->animacaoParado.finalizada = false;
+    criarQuadrosAnimacao( &novoItem->animacaoParado, novoItem->animacaoParado.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
+        novoItem->animacaoParado.quadros,
+        novoItem->animacaoParado.quantidadeQuadros,
+        100,              // duração padrão para todos os quadros
+        1, 1,            // início
+        16, 16,          // dimensões
+        1,               // separação
+        0, 0,            // deslocamento
+        false,           // de trás para frente
+        (Rectangle) {    // retângulo de colisão padrão para cada quadro
+            0, 0, 32, 32
+        }
+    );
+
+    novoItem->animacaoColetando.quantidadeQuadros = 4;
+    novoItem->animacaoColetando.quadroAtual = 0;
+    novoItem->animacaoColetando.contadorTempoQuadro = 0.0f;
+    novoItem->animacaoColetando.pararNoUltimoQuadro = false;
+    novoItem->animacaoColetando.executarUmaVez = true;
+    novoItem->animacaoColetando.finalizada = false;
+    criarQuadrosAnimacao( &novoItem->animacaoColetando, novoItem->animacaoColetando.quantidadeQuadros );
+    inicializarQuadrosAnimacao( 
+        novoItem->animacaoColetando.quadros,
+        novoItem->animacaoColetando.quantidadeQuadros,
+        50,               // duração padrão para todos os quadros
+        1, 18,            // início
+        16, 16,           // dimensões
+        1,                // separação
+        0, 0,             // deslocamento
+        false,            // de trás para frente
+        (Rectangle) { 0 } // retângulo de colisão padrão para cada quadro
+    );
+
+    novoItem->animacoes[ESTADO_ITEM_ANEL_PARADO] = &novoItem->animacaoParado; quantidadeAnimacoes++;
+    novoItem->animacoes[ESTADO_ITEM_ANEL_COLETANDO] = &novoItem->animacaoColetando; quantidadeAnimacoes++;
+    novoItem->quantidadeAnimacoes = quantidadeAnimacoes;
+
+    return novoItem;
+
+}
+
+/**
+ * @brief Destroi um item (anel).
+ */
+void destruirItemAnel( ItemAnel *item ) {
+    free( item );
+}
+
+/**
+ * @brief Atualiza um item (anel).
+ */
+void atualizarItemAnel( ItemAnel *item, float delta ) {
+    Animacao *animacaoAtual = getAnimacaoAtualItemAnel( item );
+    atualizarAnimacao( animacaoAtual, delta );
+}
+
+/**
+ * @brief Desenha um item (anel).
+ */
+void desenharItemAnel( ItemAnel *item ) {
+    QuadroAnimacao *qa = getQuadroAnimacaoAtualItemAnel( item );
+    desenharQuadroAnimacaoItemAnel( item, qa, (Vector2) { 0 }, WHITE );
+    if ( MOSTRAR_RETANGULOS ) {
+        DrawRectangleRec( item->ret, Fade( item->cor, 0.5f ) );
+        DrawRectangleLines( item->ret.x, item->ret.y, item->ret.width, item->ret.height, BLACK );
+    }
+}
+
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+
+    if ( qa != NULL ) {
+
+        DrawTexturePro(
+            rm.texturaItens,
+            qa->fonte,
+            (Rectangle) {
+                deslocamento.x + j->ret.x + qa->deslocamentoDesenho.x,
+                deslocamento.y + j->ret.y + qa->deslocamentoDesenho.y,
+                j->ret.width,
+                j->ret.height
+            },
+            (Vector2) { 0 },
+            0.0f,
+            tonalidade
+        );
+
+        if ( MOSTRAR_RETANGULOS ) {
+            float xDesenho = j->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
+            float yDesenho = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+            DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
+        }
+
+    }
+
+}
+
+static QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item ) {
+    return getQuadroAtualAnimacao( getAnimacaoAtualItemAnel( item ) );
+}
+
+static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item ) {
+    return item->animacoes[item->estado];
+}

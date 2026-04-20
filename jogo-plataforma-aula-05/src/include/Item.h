@@ -12,12 +12,17 @@
 /**
  * @brief Cria um novo item.
  */
-Item *criarItem( Rectangle ret, Color cor, Rectangle fonte, Texture2D *textura );
+Item *criarItem( TipoItem tipo );
 
 /**
  * @brief Destroi um item.
  */
 void destruirItem( Item *item );
+
+/**
+ * @brief Atualiza um item.
+ */
+void atualizarItem( Item *item, float delta );
 
 /**
  * @brief Desenha um item.

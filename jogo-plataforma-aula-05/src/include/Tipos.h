@@ -24,6 +24,24 @@ typedef enum EstadoJogador {
     ESTADO_JOGADOR_PULANDO_CORRENDO,
 } EstadoJogador;
 
+/**
+ * @brief Representa o estado do item do tipo anel.
+ */
+typedef enum EstadoItemAnel {
+    ESTADO_ITEM_ANEL_PARADO,
+    ESTADO_ITEM_ANEL_COLETANDO,
+} EstadoItemAnel;
+
+/**
+ * @brief Representa o tipo de um item.
+ */
+typedef enum TipoItem {
+    TIPO_ITEM_ANEL,
+} TipoItem;
+
+/**
+ * @brief Representa o tipo de um elemento do mapa
+ */
 typedef enum TipoElementoMapa {
     TIPO_ELEMENTO_MAPA_OBSTACULO,
     TIPO_ELEMENTO_MAPA_ITEM,
@@ -91,14 +109,28 @@ typedef struct Jogador {
 
 } Jogador;
 
-/**
- * @brief Representa um item estático do cenário.
- */
-typedef struct Item {
+typedef struct ItemAnel {
+
     Rectangle ret;
     Color cor;
-    Rectangle fonte;
-    Texture2D *textura;
+
+    EstadoItemAnel estado;
+
+    Animacao *animacoes[2];
+    int quantidadeAnimacoes;
+
+    Animacao animacaoParado;
+    Animacao animacaoColetando;
+
+} ItemAnel;
+
+/**
+ * @brief Representa um item estático do cenário.
+ * O item de fato é endereçado via membro "objeto".
+ */
+typedef struct Item {
+    void *objeto;
+    TipoItem tipo;
 } Item;
 
 /**
@@ -113,10 +145,11 @@ typedef struct Obstaculo {
 
 /**
  * @brief Representa um elemento do mapa.
+ * O elemento de fato é endereçado via membro "objeto".
  */
 typedef struct ElementoMapa ElementoMapa;
 struct ElementoMapa {
-    void *endereco;
+    void *objeto;
     TipoElementoMapa tipo;
     ElementoMapa *proximo;
 };

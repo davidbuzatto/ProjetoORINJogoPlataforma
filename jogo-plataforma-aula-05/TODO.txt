@@ -1,4 +1,4 @@
-Criar um item de tipo fixo (anel)
-Generalizar itens;
+Investigar segfault;
+Colisão jogador x itens;
 Criar um inimigo de tipo fixo (baseado na infraestrutura do item);
 Generalizar inimigos;
