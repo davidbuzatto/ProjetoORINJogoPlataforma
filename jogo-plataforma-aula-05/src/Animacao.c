@@ -51,7 +51,9 @@ void inicializarQuadrosAnimacao(
 }
 
 void destruirQuadrosAnimacao( Animacao *anim ) {
-    free( anim->quadros );
+    if ( anim != NULL ) {
+        free( anim->quadros );
+    }
 }
 
 void atualizarAnimacao( Animacao *anim, float delta ) {

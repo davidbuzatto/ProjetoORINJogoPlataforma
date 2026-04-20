@@ -95,10 +95,12 @@ InimigoMotobug *criarInimigoMotobug( Rectangle ret, Color cor ) {
  * @brief Destroi um inimigo (motobug).
  */
 void destruirInimigoMotobug( InimigoMotobug *inimigo ) {
-    for ( int i = 0; i < inimigo->quantidadeAnimacoes; i++ ) {
-        destruirQuadrosAnimacao( inimigo->animacoes[i] );
+    if ( inimigo != NULL ) {
+        for ( int i = 0; i < inimigo->quantidadeAnimacoes; i++ ) {
+            destruirQuadrosAnimacao( inimigo->animacoes[i] );
+        }
+        free( inimigo );
     }
-    free( inimigo );
 }
 
 /**

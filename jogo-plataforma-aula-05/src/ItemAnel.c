@@ -87,10 +87,12 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
  * @brief Destroi um item (anel).
  */
 void destruirItemAnel( ItemAnel *item ) {
-    for ( int i = 0; i < item->quantidadeAnimacoes; i++ ) {
-        destruirQuadrosAnimacao( item->animacoes[i] );
+    if ( item != NULL ) {
+        for ( int i = 0; i < item->quantidadeAnimacoes; i++ ) {
+            destruirQuadrosAnimacao( item->animacoes[i] );
+        }
+        free( item );
     }
-    free( item );
 }
 
 /**

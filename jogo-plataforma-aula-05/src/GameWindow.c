@@ -133,6 +133,8 @@ void initGameWindow( GameWindow *gameWindow ) {
  * @brief Destroys a GameWindow object and its dependecies.
  */
 void destroyGameWindow( GameWindow *gameWindow ) {
-    destroyGameWorld( gameWindow->gw );
-    free( gameWindow );
+    if ( gameWindow != NULL ) {
+        destroyGameWorld( gameWindow->gw );
+        free( gameWindow );
+    }
 }

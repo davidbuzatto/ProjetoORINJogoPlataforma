@@ -53,9 +53,11 @@ GameWorld *createGameWorld( void ) {
  * @brief Destrói um objeto GameWorld e suas dependências.
  */
 void destroyGameWorld( GameWorld *gw ) {
-    destruirMapa( gw->mapa );
-    destruirJogador( gw->jogador );
-    free( gw );
+    if ( gw != NULL ) {
+        destruirMapa( gw->mapa );
+        destruirJogador( gw->jogador );
+        free( gw );
+    }
 }
 
 /**

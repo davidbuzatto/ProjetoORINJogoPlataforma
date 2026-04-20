@@ -31,14 +31,16 @@ Item *criarItem( TipoItem tipo ) {
  * @brief Destroi um item.
  */
 void destruirItem( Item *item ) {
-    switch ( item->tipo ) {
-        case TIPO_ITEM_ANEL:
-            destruirItemAnel( (ItemAnel*) item->objeto );
-            break;
-        default:
-            break;
+    if ( item != NULL ) {
+        switch ( item->tipo ) {
+            case TIPO_ITEM_ANEL:
+                destruirItemAnel( (ItemAnel*) item->objeto );
+                break;
+            default:
+                break;
+        }
+        free( item );
     }
-    free( item );
 }
 
 /**

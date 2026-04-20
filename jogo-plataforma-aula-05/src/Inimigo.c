@@ -31,14 +31,16 @@ Inimigo *criarInimigo( TipoInimigo tipo ) {
  * @brief Destroi um inimigo.
  */
 void destruirInimigo( Inimigo *inimigo ) {
-    switch ( inimigo->tipo ) {
-        case TIPO_INIMIGO_MOTOBUG:
-            destruirInimigoMotobug( (InimigoMotobug*) inimigo->objeto );
-            break;
-        default:
-            break;
+    if ( inimigo != NULL ) {
+        switch ( inimigo->tipo ) {
+            case TIPO_INIMIGO_MOTOBUG:
+                destruirInimigoMotobug( (InimigoMotobug*) inimigo->objeto );
+                break;
+            default:
+                break;
+        }
+        free( inimigo );
     }
-    free( inimigo );
 }
 
 /**
