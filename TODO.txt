@@ -1,7 +1,4 @@
 Aula 05:
-    Itens;
-    Colisão Jogador + Itens;
-    
     Inimigos;
     Colisão Inimigos X Cenário;
     Colisão Inimigos X Jogador;

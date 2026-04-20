@@ -119,7 +119,7 @@ typedef struct ItemAnel {
 
     EstadoItemAnel estado;
     bool ativo;
-    
+
     Animacao *animacoes[2];
     int quantidadeAnimacoes;
 
@@ -163,11 +163,17 @@ struct ElementoMapa {
  */
 typedef struct Mapa {
 
-    // lista ligada de itens
-    ElementoMapa *elementos; // fim da lista
-    int quantidadeElementos;
+    // listas ligadas de elementos do mapa
+    ElementoMapa *obstaculos; // marca o fim da lista
+    int quantidadeObstaculos;
 
-    float tamanhoElemento;
+    ElementoMapa *itens;      // marca o fim da lista
+    int quantidadeItens;
+
+    ElementoMapa *inimigos;   // marca o fim da lista
+    int quantidadeInimigos;
+
+    float dimensaoPadraoElementos;
     int linhas;
     int colunas;
 

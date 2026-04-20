@@ -18,6 +18,10 @@
 #include "Tipos.h"
 #include "ResourceManager.h"
 
+static void inserirObstaculo( Mapa *mapa, ElementoMapa *obstaculo );
+static void inserirItem( Mapa *mapa, ElementoMapa *item );
+static void inserirInimigo( Mapa *mapa, ElementoMapa *inimigo );
+
 /**
  * @brief Carrega um mapa a partir de uma arquivo.
  */
@@ -25,9 +29,17 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
     // aloca um novo mapa
     Mapa *novoMapa = (Mapa*) malloc( sizeof( Mapa ) );
-    novoMapa->elementos = NULL;
-    novoMapa->quantidadeElementos = 0;
-    novoMapa->tamanhoElemento = 48;
+
+    novoMapa->obstaculos = NULL;
+    novoMapa->quantidadeObstaculos = 0;
+
+    novoMapa->itens = NULL;
+    novoMapa->quantidadeItens = 0;
+
+    novoMapa->inimigos = NULL;
+    novoMapa->quantidadeInimigos = 0;
+
+    novoMapa->dimensaoPadraoElementos = 48;
     novoMapa->linhas = 0;
     novoMapa->colunas = 0;
     
@@ -59,6 +71,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
             if ( c != ' ' ) {
 
                 ElementoMapa *el = (ElementoMapa*) malloc( sizeof( ElementoMapa ) );
+                el->proximo = NULL;
 
                 if ( c >= 'A' && c <= 'Z' ) {
 
@@ -66,22 +79,24 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
                     el->objeto = criarObstaculo( 
                         (Rectangle) { 
-                            .x = novoMapa->tamanhoElemento * colunaAtual, 
-                            .y = novoMapa->tamanhoElemento * linhaAtual, 
-                            .width = novoMapa->tamanhoElemento, 
-                            .height = novoMapa->tamanhoElemento
+                            .x = novoMapa->dimensaoPadraoElementos * colunaAtual, 
+                            .y = novoMapa->dimensaoPadraoElementos * linhaAtual, 
+                            .width = novoMapa->dimensaoPadraoElementos, 
+                            .height = novoMapa->dimensaoPadraoElementos
                         },
                         GRAY,
                         (Rectangle) { 
-                            1 + ( novoMapa->tamanhoElemento + 1 ) * deslocamento, 
+                            1 + ( novoMapa->dimensaoPadraoElementos + 1 ) * deslocamento, 
                             1, 
-                            novoMapa->tamanhoElemento,
-                            novoMapa->tamanhoElemento
+                            novoMapa->dimensaoPadraoElementos,
+                            novoMapa->dimensaoPadraoElementos
                         },
                         &rm.texturaTerreno
                     );
 
                     el->tipo = TIPO_ELEMENTO_MAPA_OBSTACULO;
+
+                    inserirObstaculo( novoMapa, el );
 
                 } else if ( c >= 'a' && c <= 'z' ) {
 
@@ -95,8 +110,8 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
                             item->objeto = criarItemAnel( 
                                 (Rectangle) { 
-                                    .x = novoMapa->tamanhoElemento * colunaAtual + 8, 
-                                    .y = novoMapa->tamanhoElemento * linhaAtual + 5, 
+                                    .x = novoMapa->dimensaoPadraoElementos * colunaAtual + 8, 
+                                    .y = novoMapa->dimensaoPadraoElementos * linhaAtual + 5, 
                                     .width = 32, 
                                     .height = 32
                                 },
@@ -109,21 +124,17 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                             break;
                         default:
                             TraceLog( LOG_ERROR, "Tipo de item desconhecido." );
+                            abort();
                             break;
                     }
 
-                }
+                    inserirItem( novoMapa, el );
 
-                el->proximo = NULL;
+                } else if ( c >= '0' && c <= '9' ) {
 
-                // inserção na lista
-                if ( novoMapa->elementos == NULL ) {
-                    novoMapa->elementos = el;
-                } else {
-                    el->proximo = novoMapa->elementos;
-                    novoMapa->elementos = el;
+                    // inimigos
+
                 }
-                novoMapa->quantidadeElementos++;
 
             }
 
@@ -153,28 +164,31 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
  */
 void destruirMapa( Mapa *m ) {
 
-    ElementoMapa *el = m->elementos;
-
+    ElementoMapa *el = NULL;
+    
+    el = m->obstaculos;
     while ( el != NULL ) {
-
-        switch ( el->tipo ) {
-            case TIPO_ELEMENTO_MAPA_OBSTACULO:
-                destruirObstaculo( (Obstaculo*) el->objeto );
-                break;
-            case TIPO_ELEMENTO_MAPA_ITEM:
-                destruirItem( (Item*) el->objeto );
-                break;
-            case TIPO_ELEMENTO_MAPA_INIMIGO:
-                break;
-            default:
-                break;
-        }
-
+        destruirObstaculo( (Obstaculo*) el->objeto );
         ElementoMapa *t = el;
         el = el->proximo;
         free( t );
-
     }
+
+    el = m->itens;
+    while ( el != NULL ) {
+        destruirItem( (Item*) el->objeto );
+        ElementoMapa *t = el;
+        el = el->proximo;
+        free( t );
+    }
+
+    /*el = m->inimigos;
+    while ( el != NULL ) {
+        destruirInimigo( (Obstaculo*) el->objeto );
+        ElementoMapa *t = el;
+        el = el->proximo;
+        free( t );
+    }*/
 
 }
 
@@ -183,23 +197,19 @@ void destruirMapa( Mapa *m ) {
  */
 void atualizarMapa( Mapa *m, float delta ) {
 
-    ElementoMapa *el = m->elementos;
+    ElementoMapa *el = NULL;
 
+    el = m->itens;
     while ( el != NULL ) {
-        
-        switch ( el->tipo ) {
-            case TIPO_ELEMENTO_MAPA_ITEM:
-                atualizarItem( (Item*) el->objeto, delta );
-                break;
-            case TIPO_ELEMENTO_MAPA_INIMIGO:
-                break;
-            default:
-                break;
-        }
-        
+        atualizarItem( (Item*) el->objeto, delta );
         el = el->proximo;
-
     }
+
+    /*el = m->inimigos;
+    while ( el != NULL ) {
+        atualizarInimigo( (Inimigo*) el->objeto, delta );
+        el = el->proximo;
+    }*/
 
 }
 
@@ -208,26 +218,25 @@ void atualizarMapa( Mapa *m, float delta ) {
  */
 void desenharMapa( Mapa *m ) {
 
-    ElementoMapa *el = m->elementos;
+    ElementoMapa *el = NULL;
 
+    el = m->obstaculos;
     while ( el != NULL ) {
-        
-        switch ( el->tipo ) {
-            case TIPO_ELEMENTO_MAPA_OBSTACULO:
-                desenharObstaculo( (Obstaculo*) el->objeto );
-                break;
-            case TIPO_ELEMENTO_MAPA_ITEM:
-                desenharItem( (Item*) el->objeto );
-                break;
-            case TIPO_ELEMENTO_MAPA_INIMIGO:
-                break;
-            default:
-                break;
-        }
-        
+        desenharObstaculo( (Obstaculo*) el->objeto );
         el = el->proximo;
-
     }
+
+    el = m->itens;
+    while ( el != NULL ) {
+        desenharItem( (Item*) el->objeto );
+        el = el->proximo;
+    }
+
+    /*el = m->inimigos;
+    while ( el != NULL ) {
+        desenharInimigo( (Inimigo*) el->objeto );
+        el = el->proximo;
+    }*/
 
 }
 
@@ -235,12 +244,51 @@ void desenharMapa( Mapa *m ) {
  * @brief Calcula a largura do mapa.
  */
 int calcularLarguraMapa( Mapa *m ) {
-    return (int) ( m->tamanhoElemento * m->colunas );
+    return (int) ( m->dimensaoPadraoElementos * m->colunas );
 }
 
 /**
  * @brief Calcula a altura do mapa.
  */
 int calcularAlturaMapa( Mapa *m ) {
-    return (int) ( m->tamanhoElemento * m->linhas );
+    return (int) ( m->dimensaoPadraoElementos * m->linhas );
+}
+
+/**
+ * @brief Insere um obstáculo na lista de obstáculos.
+ */
+static void inserirObstaculo( Mapa *mapa, ElementoMapa *obstaculo ) {
+    if ( mapa->obstaculos == NULL ) {
+        mapa->obstaculos = obstaculo;
+    } else {
+        obstaculo->proximo = mapa->obstaculos;
+        mapa->obstaculos = obstaculo;
+    }
+    mapa->quantidadeObstaculos++;
+}
+
+/**
+ * @brief Insere um item na lista de itens.
+ */
+static void inserirItem( Mapa *mapa, ElementoMapa *item ) {
+    if ( mapa->itens == NULL ) {
+        mapa->itens = item;
+    } else {
+        item->proximo = mapa->itens;
+        mapa->itens = item;
+    }
+    mapa->quantidadeItens++;
+}
+
+/**
+ * @brief Insere um inimigo na lista de inimigos.
+ */
+static void inserirInimigo( Mapa *mapa, ElementoMapa *inimigo ) {
+    if ( mapa->inimigos == NULL ) {
+        mapa->inimigos = inimigo;
+    } else {
+        inimigo->proximo = mapa->inimigos;
+        mapa->inimigos = inimigo;
+    }
+    mapa->quantidadeInimigos++;
 }
