@@ -28,3 +28,8 @@ void atualizarItemAnel( ItemAnel *item, float delta );
  * @brief Desenha um item (anel).
  */
 void desenharItemAnel( ItemAnel *item );
+
+/**
+ * @brief Obtém o quadro de animação atual de um item (anel).
+ */
+QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item );

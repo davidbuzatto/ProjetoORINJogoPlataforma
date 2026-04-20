@@ -12,11 +12,11 @@
 
 #include "Animacao.h"
 #include "ItemAnel.h"
+#include "Macros.h"
 #include "ResourceManager.h"
 #include "Tipos.h"
 
 static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
-static QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item );
 static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -30,6 +30,8 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
 
     novoItem->ret = ret;
     novoItem->cor = cor;
+    novoItem->estado = ESTADO_ITEM_ANEL_PARADO;
+    novoItem->ativo = true;
 
     int quantidadeAnimacoes = 0;
 
@@ -43,7 +45,7 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
     inicializarQuadrosAnimacao( 
         novoItem->animacaoParado.quadros,
         novoItem->animacaoParado.quantidadeQuadros,
-        100,              // duração padrão para todos os quadros
+        100,             // duração padrão para todos os quadros
         1, 1,            // início
         16, 16,          // dimensões
         1,               // separação
@@ -64,7 +66,7 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
     inicializarQuadrosAnimacao( 
         novoItem->animacaoColetando.quadros,
         novoItem->animacaoColetando.quantidadeQuadros,
-        50,               // duração padrão para todos os quadros
+        80,               // duração padrão para todos os quadros
         1, 18,            // início
         16, 16,           // dimensões
         1,                // separação
@@ -92,20 +94,34 @@ void destruirItemAnel( ItemAnel *item ) {
  * @brief Atualiza um item (anel).
  */
 void atualizarItemAnel( ItemAnel *item, float delta ) {
-    Animacao *animacaoAtual = getAnimacaoAtualItemAnel( item );
-    atualizarAnimacao( animacaoAtual, delta );
+    if ( item->ativo ) {
+        Animacao *animacaoAtual = getAnimacaoAtualItemAnel( item );
+        atualizarAnimacao( animacaoAtual, delta );
+        if ( animacaoAtual->finalizada ) {
+            item->ativo = false;
+        }
+    }
 }
 
 /**
  * @brief Desenha um item (anel).
  */
 void desenharItemAnel( ItemAnel *item ) {
-    QuadroAnimacao *qa = getQuadroAnimacaoAtualItemAnel( item );
-    desenharQuadroAnimacaoItemAnel( item, qa, (Vector2) { 0 }, WHITE );
-    if ( MOSTRAR_RETANGULOS ) {
-        DrawRectangleRec( item->ret, Fade( item->cor, 0.5f ) );
-        DrawRectangleLines( item->ret.x, item->ret.y, item->ret.width, item->ret.height, BLACK );
+    if ( item->ativo ) {
+        QuadroAnimacao *qa = getQuadroAnimacaoAtualItemAnel( item );
+        desenharQuadroAnimacaoItemAnel( item, qa, (Vector2) { 0 }, WHITE );
+        if ( MOSTRAR_RETANGULOS ) {
+            DrawRectangleRec( item->ret, Fade( item->cor, 0.5f ) );
+            DrawRectangleLines( item->ret.x, item->ret.y, item->ret.width, item->ret.height, BLACK );
+        }
     }
+}
+
+/**
+ * @brief Obtém o quadro de animação atual de um item (anel).
+ */
+QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item ) {
+    return getQuadroAtualAnimacao( getAnimacaoAtualItemAnel( item ) );
 }
 
 static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
@@ -134,10 +150,6 @@ static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vec
 
     }
 
-}
-
-static QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item ) {
-    return getQuadroAtualAnimacao( getAnimacaoAtualItemAnel( item ) );
 }
 
 static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item ) {

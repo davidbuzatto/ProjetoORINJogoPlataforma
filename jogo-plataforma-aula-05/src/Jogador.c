@@ -12,6 +12,8 @@
 #include "raylib/raylib.h"
 
 #include "Animacao.h"
+#include "Item.h"
+#include "ItemAnel.h"
 #include "Macros.h"
 #include "Jogador.h"
 #include "ResourceManager.h"
@@ -53,6 +55,9 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
 
     novoJogador->quantidadePulos = 0;
     novoJogador->quantidadeMaxPulos = 1;
+
+    novoJogador->quantidadeAneis = 0;
+    novoJogador->quantidadeVidas = 3;
 
     novoJogador->estado = ESTADO_JOGADOR_PARADO;
     novoJogador->olhandoParaDireita = true;
@@ -385,22 +390,23 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
     while ( el != NULL ) {
 
+        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
+
+        float deslocamentoX = j->olhandoParaDireita
+            ? qa->deslocamentoDesenho.x + qa->retColisao.x
+            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+
+        Rectangle retColCalculado = {
+            j->ret.x + deslocamentoX,
+            j->ret.y + deslocamentoY,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
         if ( el->tipo == TIPO_ELEMENTO_MAPA_OBSTACULO ) {
 
             Obstaculo *o = (Obstaculo*) el->objeto;
-            QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
-
-            float deslocamentoX = j->olhandoParaDireita
-                ? qa->deslocamentoDesenho.x + qa->retColisao.x
-                : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-            float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
-
-            Rectangle retColCalculado = {
-                j->ret.x + deslocamentoX,
-                j->ret.y + deslocamentoY,
-                qa->retColisao.width,
-                qa->retColisao.height
-            };
 
             if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
                 if ( retColCalculado.x + retColCalculado.width / 2 < o->ret.x + o->ret.width / 2 ) {
@@ -409,6 +415,38 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
                     j->ret.x = o->ret.x + o->ret.width - deslocamentoX;
                 }
                 j->vel.x = 0;
+            }
+
+        } else if ( el->tipo == TIPO_ELEMENTO_MAPA_ITEM ) {
+
+            Item *item = (Item*) el->objeto;
+
+            if ( item->tipo == TIPO_ITEM_ANEL ) {
+
+                ItemAnel *itemAnel = (ItemAnel*) item->objeto;
+
+                if ( !itemAnel->ativo || itemAnel->estado == ESTADO_ITEM_ANEL_COLETANDO ) {
+                    el = el->proximo;
+                    continue;
+                }
+
+                QuadroAnimacao *qaItem = getQuadroAnimacaoAtualItemAnel( itemAnel );
+
+                float dItemX = qaItem->deslocamentoDesenho.x + qa->retColisao.x;
+                float dItemY = qaItem->deslocamentoDesenho.y + qa->retColisao.y;
+                
+                Rectangle retColItemCalculado = {
+                    itemAnel->ret.x + dItemX,
+                    itemAnel->ret.y + dItemY,
+                    qaItem->retColisao.width,
+                    qaItem->retColisao.height
+                };
+
+                if ( CheckCollisionRecs( retColCalculado, retColItemCalculado ) ) {
+                    itemAnel->estado = ESTADO_ITEM_ANEL_COLETANDO;
+                    j->quantidadeAneis++;
+                }
+
             }
 
         }

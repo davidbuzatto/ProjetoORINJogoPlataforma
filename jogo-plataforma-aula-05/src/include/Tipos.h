@@ -93,6 +93,9 @@ typedef struct Jogador {
     int quantidadePulos;
     int quantidadeMaxPulos;
 
+    int quantidadeAneis;
+    int quantidadeVidas;
+
     EstadoJogador estado;
     bool olhandoParaDireita;
 
@@ -115,7 +118,8 @@ typedef struct ItemAnel {
     Color cor;
 
     EstadoItemAnel estado;
-
+    bool ativo;
+    
     Animacao *animacoes[2];
     int quantidadeAnimacoes;
 
