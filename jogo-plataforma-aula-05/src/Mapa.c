@@ -12,6 +12,8 @@
 
 #include "Macros.h"
 #include "Mapa.h"
+#include "Inimigo.h"
+#include "InimigoMotobug.h"
 #include "Item.h"
 #include "ItemAnel.h"
 #include "Obstaculo.h"
@@ -122,6 +124,7 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
                             el->tipo = TIPO_ELEMENTO_MAPA_ITEM;
 
                             break;
+
                         default:
                             TraceLog( LOG_ERROR, "Tipo de item desconhecido." );
                             abort();
@@ -132,8 +135,40 @@ Mapa *carregarMapa( const char *caminhoArquivo ) {
 
                 } else if ( c >= '0' && c <= '9' ) {
 
-                    // inimigos
+                    Inimigo *inimigo = NULL;
 
+                    switch ( c ) {
+
+                        case '0':
+
+                            inimigo = criarInimigo( TIPO_INIMIGO_MOTOBUG );
+
+                            inimigo->objeto = criarInimigoMotobug( 
+                                (Rectangle) { 
+                                    .x = novoMapa->dimensaoPadraoElementos * colunaAtual, 
+                                    .y = novoMapa->dimensaoPadraoElementos * linhaAtual - 12, 
+                                    .width = 80, 
+                                    .height = 60
+                                },
+                                YELLOW
+                            );
+
+                            el->objeto = inimigo;
+                            el->tipo = TIPO_ELEMENTO_MAPA_INIMIGO;
+
+                            break;
+
+                        default:
+                            TraceLog( LOG_ERROR, "Tipo de inimigo desconhecido." );
+                            abort();
+                            break;
+                    }
+
+                    inserirInimigo( novoMapa, el );
+
+                } else {
+                    TraceLog( LOG_ERROR, "Entidade inválida no mapa." );
+                    abort();
                 }
 
             }
@@ -182,13 +217,13 @@ void destruirMapa( Mapa *m ) {
         free( t );
     }
 
-    /*el = m->inimigos;
+    el = m->inimigos;
     while ( el != NULL ) {
-        destruirInimigo( (Obstaculo*) el->objeto );
+        destruirInimigo( (Inimigo*) el->objeto );
         ElementoMapa *t = el;
         el = el->proximo;
         free( t );
-    }*/
+    }
 
 }
 
@@ -205,11 +240,11 @@ void atualizarMapa( Mapa *m, float delta ) {
         el = el->proximo;
     }
 
-    /*el = m->inimigos;
+    el = m->inimigos;
     while ( el != NULL ) {
         atualizarInimigo( (Inimigo*) el->objeto, delta );
         el = el->proximo;
-    }*/
+    }
 
 }
 
@@ -232,11 +267,11 @@ void desenharMapa( Mapa *m ) {
         el = el->proximo;
     }
 
-    /*el = m->inimigos;
+    el = m->inimigos;
     while ( el != NULL ) {
         desenharInimigo( (Inimigo*) el->objeto );
         el = el->proximo;
-    }*/
+    }
 
 }
 

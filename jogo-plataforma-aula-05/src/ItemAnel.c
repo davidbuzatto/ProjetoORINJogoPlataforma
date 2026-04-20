@@ -76,7 +76,7 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
     );
 
     novoItem->animacoes[ESTADO_ITEM_ANEL_PARADO] = &novoItem->animacaoParado; quantidadeAnimacoes++;
-    novoItem->animacoes[ESTADO_ITEM_ANEL_COLETANDO] = &novoItem->animacaoColetando; quantidadeAnimacoes++;
+    novoItem->animacoes[ESTADO_ITEM_ANEL_COLETADO] = &novoItem->animacaoColetando; quantidadeAnimacoes++;
     novoItem->quantidadeAnimacoes = quantidadeAnimacoes;
 
     return novoItem;
@@ -87,6 +87,9 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
  * @brief Destroi um item (anel).
  */
 void destruirItemAnel( ItemAnel *item ) {
+    for ( int i = 0; i < item->quantidadeAnimacoes; i++ ) {
+        destruirQuadrosAnimacao( item->animacoes[i] );
+    }
     free( item );
 }
 
@@ -97,7 +100,7 @@ void atualizarItemAnel( ItemAnel *item, float delta ) {
     if ( item->ativo ) {
         Animacao *animacaoAtual = getAnimacaoAtualItemAnel( item );
         atualizarAnimacao( animacaoAtual, delta );
-        if ( animacaoAtual->finalizada ) {
+        if ( item->estado == ESTADO_ITEM_ANEL_COLETADO && animacaoAtual->finalizada ) {
             item->ativo = false;
         }
     }

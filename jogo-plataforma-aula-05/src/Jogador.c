@@ -231,6 +231,9 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
  */
 void destruirJogador( Jogador *j ) {
     if ( j != NULL ) {
+        for ( int i = 0; i < j->quantidadeAnimacoes; i++ ) {
+            destruirQuadrosAnimacao( j->animacoes[i] );
+        }
         free( j );
     }
 }
@@ -491,7 +494,7 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
 
             ItemAnel *itemAnel = (ItemAnel*) item->objeto;
 
-            if ( !itemAnel->ativo || itemAnel->estado == ESTADO_ITEM_ANEL_COLETANDO ) {
+            if ( !itemAnel->ativo || itemAnel->estado == ESTADO_ITEM_ANEL_COLETADO ) {
                 el = el->proximo;
                 continue;
             }
@@ -509,7 +512,7 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
             };
 
             if ( CheckCollisionRecs( retColCalculado, retColItemCalculado ) ) {
-                itemAnel->estado = ESTADO_ITEM_ANEL_COLETANDO;
+                itemAnel->estado = ESTADO_ITEM_ANEL_COLETADO;
                 j->quantidadeAneis++;
             }
 

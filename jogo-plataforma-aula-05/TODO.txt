@@ -1,2 +1,1 @@
-Criar um inimigo de tipo fixo (baseado na infraestrutura do item);
-Generalizar inimigos;
+Terminar a implementação dos inimigos.

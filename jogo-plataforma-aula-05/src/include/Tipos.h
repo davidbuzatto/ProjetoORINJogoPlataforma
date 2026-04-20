@@ -25,11 +25,26 @@ typedef enum EstadoJogador {
 } EstadoJogador;
 
 /**
+ * @brief Representa o estado do inimigo do tipo Motobug.
+ */
+typedef enum EstadoInimigoMotobug {
+    ESTADO_INIMIGO_MOTOBUG_ANDANDO,
+    ESTADO_INIMIGO_MOTOBUG_MORRENDO,
+} EstadoInimigoMotobug;
+
+/**
+ * @brief Representa o tipo de um inimigo.
+ */
+typedef enum TipoInimigo {
+    TIPO_INIMIGO_MOTOBUG,
+} TipoInimigo;
+
+/**
  * @brief Representa o estado do item do tipo anel.
  */
 typedef enum EstadoItemAnel {
     ESTADO_ITEM_ANEL_PARADO,
-    ESTADO_ITEM_ANEL_COLETANDO,
+    ESTADO_ITEM_ANEL_COLETADO,
 } EstadoItemAnel;
 
 /**
@@ -112,6 +127,42 @@ typedef struct Jogador {
 
 } Jogador;
 
+/**
+ * @brief Representa um inimigo do tipo Motobug.
+ */
+typedef struct InimigoMotobug {
+
+    Rectangle ret;
+    Vector2 vel;
+    Color cor;
+
+    float velAndando;
+    float velMaxQueda;
+
+    EstadoInimigoMotobug estado;
+    bool ativo;
+    bool olhandoParaDireita;
+
+    Animacao *animacoes[2];
+    int quantidadeAnimacoes;
+
+    Animacao animacaoAndando;
+    Animacao animacaoMorrendo;
+
+} InimigoMotobug;
+
+/**
+ * @brief Representa um inimigo.
+ * O inimigo de fato é endereçado via membro "objeto".
+ */
+typedef struct Inimigo {
+    void *objeto;
+    TipoInimigo tipo;
+} Inimigo;
+
+/**
+ * @brief Representa um item do tipo anel.
+ */
 typedef struct ItemAnel {
 
     Rectangle ret;
@@ -129,7 +180,7 @@ typedef struct ItemAnel {
 } ItemAnel;
 
 /**
- * @brief Representa um item estático do cenário.
+ * @brief Representa um item estático do mapa.
  * O item de fato é endereçado via membro "objeto".
  */
 typedef struct Item {
@@ -138,7 +189,7 @@ typedef struct Item {
 } Item;
 
 /**
- * @brief Representa um obstáculo estático do cenário.
+ * @brief Representa um obstáculo estático do mapa.
  */
 typedef struct Obstaculo {
     Rectangle ret;
