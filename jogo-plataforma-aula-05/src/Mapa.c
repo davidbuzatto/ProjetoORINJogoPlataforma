@@ -234,7 +234,7 @@ void destruirMapa( Mapa *m ) {
 /**
  * @brief Atualiza um mapa.
  */
-void atualizarMapa( Mapa *m, float delta ) {
+void atualizarMapa( Mapa *m, GameWorld *gw, float delta ) {
 
     ElementoMapa *el = NULL;
 
@@ -246,7 +246,7 @@ void atualizarMapa( Mapa *m, float delta ) {
 
     el = m->inimigos;
     while ( el != NULL ) {
-        atualizarInimigo( (Inimigo*) el->objeto, delta );
+        atualizarInimigo( (Inimigo*) el->objeto, gw, delta );
         el = el->proximo;
     }
 

@@ -16,7 +16,7 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
 static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -129,7 +129,7 @@ QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item ) {
     return getQuadroAtualAnimacao( getAnimacaoAtualItemAnel( item ) );
 }
 
-static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
 
     if ( qa != NULL ) {
 
@@ -137,10 +137,10 @@ static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vec
             rm.texturaItens,
             qa->fonte,
             (Rectangle) {
-                deslocamento.x + j->ret.x + qa->deslocamentoDesenho.x,
-                deslocamento.y + j->ret.y + qa->deslocamentoDesenho.y,
-                j->ret.width,
-                j->ret.height
+                deslocamento.x + item->ret.x + qa->deslocamentoDesenho.x,
+                deslocamento.y + item->ret.y + qa->deslocamentoDesenho.y,
+                item->ret.width,
+                item->ret.height
             },
             (Vector2) { 0 },
             0.0f,
@@ -148,8 +148,8 @@ static void desenharQuadroAnimacaoItemAnel( ItemAnel *j, QuadroAnimacao *qa, Vec
         );
 
         if ( MOSTRAR_RETANGULOS ) {
-            float xDesenho = j->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
-            float yDesenho = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+            float xDesenho = item->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
+            float yDesenho = item->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 

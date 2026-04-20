@@ -46,11 +46,11 @@ void destruirInimigo( Inimigo *inimigo ) {
 /**
  * @brief Atualiza um inimigo.
  */
-void atualizarInimigo( Inimigo *inimigo, float delta ) {
+void atualizarInimigo( Inimigo *inimigo, GameWorld *gw, float delta ) {
 
     switch ( inimigo->tipo ) {
         case TIPO_INIMIGO_MOTOBUG:
-            atualizarInimigoMotobug( (InimigoMotobug*) inimigo->objeto, delta );
+            atualizarInimigoMotobug( (InimigoMotobug*) inimigo->objeto, gw, delta );
             break;
         default:
             return;
@@ -69,6 +69,116 @@ void desenharInimigo( Inimigo *inimigo ) {
             break;
         default:
             return;
+    }
+
+}
+
+/**
+ * @brief Resolve colisões do inimigo com o mapa no eixo X.
+ */
+void resolverColisaoInimigoObstaculosMapaX( Inimigo *inimigo, Mapa *mapa ) {
+
+    ElementoMapa *el = mapa->obstaculos;
+
+    while ( el != NULL ) {
+
+        QuadroAnimacao *qa = NULL;
+
+        bool *olhandoParaDireita = NULL;
+        Rectangle *ret = NULL;
+        Vector2 *vel = NULL;
+
+        if ( inimigo->tipo == TIPO_INIMIGO_MOTOBUG ) {
+            InimigoMotobug *motobug = (InimigoMotobug*) inimigo->objeto;
+            qa = getQuadroAnimacaoAtualInimigoMotobug( motobug );
+            olhandoParaDireita = &motobug->olhandoParaDireita;
+            ret = &motobug->ret;
+            vel = &motobug->vel;
+        } else {
+            el = el->proximo;
+            continue;
+        }
+
+        float deslocamentoX = *olhandoParaDireita
+            ? -qa->deslocamentoDesenho.x + ret->width - qa->retColisao.x - qa->retColisao.width
+            : qa->deslocamentoDesenho.x + qa->retColisao.x;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+
+        Rectangle retColCalculado = {
+            ret->x + deslocamentoX,
+            ret->y + deslocamentoY,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
+        Obstaculo *o = (Obstaculo*) el->objeto;
+
+        if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
+            if ( retColCalculado.x + retColCalculado.width / 2 < o->ret.x + o->ret.width / 2 ) {
+                ret->x = o->ret.x - qa->retColisao.width - deslocamentoX;
+                *olhandoParaDireita = !*olhandoParaDireita;
+            } else {
+                ret->x = o->ret.x + o->ret.width - deslocamentoX;
+                *olhandoParaDireita = !*olhandoParaDireita;
+            }
+        }
+
+        el = el->proximo;
+
+    }
+
+}
+
+/**
+ * @brief Resolve colisões do inimigo com o mapa no eixo Y.
+ */
+void resolverColisaoInimigoObstaculosMapaY( Inimigo *inimigo, Mapa *mapa ) {
+
+    ElementoMapa *el = mapa->obstaculos;
+
+    while ( el != NULL ) {
+
+        Obstaculo *o = (Obstaculo*) el->objeto;
+        QuadroAnimacao *qa = NULL;
+
+        bool *olhandoParaDireita = NULL;
+        Rectangle *ret = NULL;
+        Vector2 *vel = NULL;
+
+        if ( inimigo->tipo == TIPO_INIMIGO_MOTOBUG ) {
+            InimigoMotobug *motobug = (InimigoMotobug*) inimigo->objeto;
+            qa = getQuadroAnimacaoAtualInimigoMotobug( motobug );
+            olhandoParaDireita = &motobug->olhandoParaDireita;
+            ret = &motobug->ret;
+            vel = &motobug->vel;
+        } else {
+            el = el->proximo;
+            continue;
+        }
+
+        float deslocamentoX = *olhandoParaDireita
+            ? -qa->deslocamentoDesenho.x + ret->width - qa->retColisao.x - qa->retColisao.width
+            : qa->deslocamentoDesenho.x + qa->retColisao.x;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+
+        Rectangle retColCalculado = {
+            ret->x + deslocamentoX,
+            ret->y + deslocamentoY,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
+        if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
+            if ( retColCalculado.y + retColCalculado.height / 2 < o->ret.y + o->ret.height / 2 ) {
+                ret->y = o->ret.y - qa->retColisao.height - deslocamentoY;
+            } else {
+                ret->y = o->ret.y + o->ret.height - deslocamentoY;
+            }
+            vel->y = 0;
+        }
+
+        el = el->proximo;
+
     }
 
 }

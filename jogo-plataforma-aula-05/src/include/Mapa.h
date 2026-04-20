@@ -22,7 +22,7 @@ void destruirMapa( Mapa *m );
 /**
  * @brief Atualiza um mapa.
  */
-void atualizarMapa( Mapa *m, float delta );
+void atualizarMapa( Mapa *m, GameWorld *gw, float delta );
 
 /**
  * @brief Desenha um mapa.

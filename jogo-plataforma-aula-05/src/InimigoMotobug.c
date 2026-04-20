@@ -11,12 +11,13 @@
 #include "raylib/raylib.h"
 
 #include "Animacao.h"
+#include "Inimigo.h"
 #include "InimigoMotobug.h"
 #include "Macros.h"
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
 static Animacao *getAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -106,12 +107,17 @@ void destruirInimigoMotobug( InimigoMotobug *inimigo ) {
 /**
  * @brief Atualiza um inimigo (motobug).
  */
-void atualizarInimigoMotobug( InimigoMotobug *inimigo, float delta ) {
+void atualizarInimigoMotobug( InimigoMotobug *inimigo, GameWorld *gw, float delta ) {
 
     if ( inimigo->ativo ) {
 
         Animacao *animacaoAtual = getAnimacaoAtualInimigoMotobug( inimigo );
         atualizarAnimacao( animacaoAtual, delta );
+
+        Inimigo ini = {
+            .objeto = inimigo,
+            .tipo = TIPO_INIMIGO_MOTOBUG
+        };
 
         if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_ANDANDO ) {
             if ( inimigo->olhandoParaDireita ) {
@@ -123,7 +129,17 @@ void atualizarInimigoMotobug( InimigoMotobug *inimigo, float delta ) {
             inimigo->vel.x = 0.0f;
         }
 
+        // fase X
         inimigo->ret.x += inimigo->vel.x * delta;
+        resolverColisaoInimigoObstaculosMapaX( &ini, gw->mapa );
+
+        // fase Y
+        inimigo->vel.y += gw->gravidade * delta;
+        if ( inimigo->vel.y > inimigo->velMaxQueda ) {
+            inimigo->vel.y = inimigo->velMaxQueda;
+        }
+        inimigo->ret.y += inimigo->vel.y * delta;
+        resolverColisaoInimigoObstaculosMapaY( &ini, gw->mapa );
 
         if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO && animacaoAtual->finalizada ) {
             inimigo->ativo = false;
@@ -154,18 +170,23 @@ QuadroAnimacao *getQuadroAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo ) 
     return getQuadroAtualAnimacao( getAnimacaoAtualInimigoMotobug( inimigo ) );
 }
 
-static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
 
     if ( qa != NULL ) {
         
         DrawTexturePro(
             rm.texturaBadniks,
-            qa->fonte,
             (Rectangle) {
-                deslocamento.x + j->ret.x + qa->deslocamentoDesenho.x,
-                deslocamento.y + j->ret.y + qa->deslocamentoDesenho.y,
-                j->ret.width,
-                j->ret.height
+                qa->fonte.x,
+                qa->fonte.y,
+                inimigo->olhandoParaDireita ? -qa->fonte.width : qa->fonte.width,
+                qa->fonte.height
+            },
+            (Rectangle) {
+                deslocamento.x + inimigo->ret.x + qa->deslocamentoDesenho.x,
+                deslocamento.y + inimigo->ret.y + qa->deslocamentoDesenho.y,
+                inimigo->ret.width,
+                inimigo->ret.height
             },
             (Vector2) { 0 },
             0.0f,
@@ -173,8 +194,10 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *j, QuadroAnima
         );
 
         if ( MOSTRAR_RETANGULOS ) {
-            float xDesenho = j->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
-            float yDesenho = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+            float xDesenho = inimigo->olhandoParaDireita
+                ? inimigo->ret.x - qa->deslocamentoDesenho.x + inimigo->ret.width - qa->retColisao.x - qa->retColisao.width
+                : inimigo->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
+            float yDesenho = inimigo->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 

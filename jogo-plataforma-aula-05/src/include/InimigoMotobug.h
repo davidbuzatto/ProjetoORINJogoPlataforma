@@ -22,7 +22,7 @@ void destruirInimigoMotobug( InimigoMotobug *inimigo );
 /**
  * @brief Atualiza um inimigo (motobug).
  */
-void atualizarInimigoMotobug( InimigoMotobug *inimigo, float delta );
+void atualizarInimigoMotobug( InimigoMotobug *inimigo, GameWorld *gw,float delta );
 
 /**
  * @brief Desenha um inimigo (motobug).

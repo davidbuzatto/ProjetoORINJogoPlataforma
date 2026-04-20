@@ -141,8 +141,9 @@ typedef struct InimigoMotobug {
 
     EstadoInimigoMotobug estado;
     bool ativo;
-    bool olhandoParaDireita;
-
+    bool olhandoParaDireita;     // *cuidado! a reflexão dos inimigos é ao contrário
+                                 // do jogador! eles começam olhando para a esquerda
+                                 // e as sprites são orientadas para a esquerda inicialmente
     Animacao *animacoes[2];
     int quantidadeAnimacoes;
 

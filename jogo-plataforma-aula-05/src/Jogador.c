@@ -27,6 +27,7 @@ static void resolverColisaoJogadorObstaculosMapaX( Jogador *j, Mapa *mapa );
 static void resolverColisaoJogadorObstaculosMapaY( Jogador *j, Mapa *mapa );
 
 static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa );
+static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa );
 
 static const bool MOSTRAR_RETANGULOS = false;
 
@@ -330,6 +331,7 @@ void atualizarJogador( Jogador *j, GameWorld *gw, float delta ) {
     resolverColisaoJogadorObstaculosMapaY( j, gw->mapa );
 
     resolverColisaoJogadorItensMapa( j, gw->mapa );
+    resolverColisaoJogadorInimigosMapa( j, gw->mapa );
 
 }
 
@@ -521,5 +523,61 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
         el = el->proximo;
 
     }
+
+}
+
+static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
+
+    /*ElementoMapa *el = mapa->itens;
+
+    while ( el != NULL ) {
+
+        QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
+
+        float deslocamentoX = j->olhandoParaDireita
+            ? qa->deslocamentoDesenho.x + qa->retColisao.x
+            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
+        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+
+        Rectangle retColCalculado = {
+            j->ret.x + deslocamentoX,
+            j->ret.y + deslocamentoY,
+            qa->retColisao.width,
+            qa->retColisao.height
+        };
+
+        Item *item = (Item*) el->objeto;
+
+        if ( item->tipo == TIPO_ITEM_ANEL ) {
+
+            ItemAnel *itemAnel = (ItemAnel*) item->objeto;
+
+            if ( !itemAnel->ativo || itemAnel->estado == ESTADO_ITEM_ANEL_COLETADO ) {
+                el = el->proximo;
+                continue;
+            }
+
+            QuadroAnimacao *qaItem = getQuadroAnimacaoAtualItemAnel( itemAnel );
+
+            float dItemX = qaItem->deslocamentoDesenho.x + qa->retColisao.x;
+            float dItemY = qaItem->deslocamentoDesenho.y + qa->retColisao.y;
+            
+            Rectangle retColItemCalculado = {
+                itemAnel->ret.x + dItemX,
+                itemAnel->ret.y + dItemY,
+                qaItem->retColisao.width,
+                qaItem->retColisao.height
+            };
+
+            if ( CheckCollisionRecs( retColCalculado, retColItemCalculado ) ) {
+                itemAnel->estado = ESTADO_ITEM_ANEL_COLETADO;
+                j->quantidadeAneis++;
+            }
+
+        }
+
+        el = el->proximo;
+
+    }*/
 
 }
