@@ -25,7 +25,7 @@ static void initObstaculos( GameWorld *gw );
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
  */
-GameWorld* createGameWorld( void ) {
+GameWorld *createGameWorld( void ) {
 
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
     gw->jogador = criarJogador( GetScreenWidth() / 2, GetScreenHeight() / 2, 50, 50 );

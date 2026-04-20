@@ -12,7 +12,7 @@
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
  */
-GameWorld* createGameWorld( void );
+GameWorld *createGameWorld( void );
 
 /**
  * @brief Destrói um objeto GameWorld e suas dependências.
