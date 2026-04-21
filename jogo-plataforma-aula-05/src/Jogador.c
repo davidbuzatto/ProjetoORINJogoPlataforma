@@ -492,13 +492,10 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
             }
 
             QuadroAnimacao *qaItem = getQuadroAnimacaoAtualItemAnel( itemAnel );
-
-            float dItemX = qa->retColisao.x;
-            float dItemY = qa->retColisao.y;
             
             Rectangle retColItemCalculado = {
-                itemAnel->ret.x + dItemX,
-                itemAnel->ret.y + dItemY,
+                itemAnel->ret.x + qaItem->retColisao.x,
+                itemAnel->ret.y + qaItem->retColisao.y,
                 qaItem->retColisao.width,
                 qaItem->retColisao.height
             };
@@ -568,7 +565,7 @@ static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
 
             if ( CheckCollisionRecs( retColCalculado, retColInimigoCalculado ) ) {
 
-                if ( j->estado >= ESTADO_JOGADOR_PULANDO && j->estado <= ESTADO_JOGADOR_PULANDO_RAPIDO ) {
+                if ( j->estado >= ESTADO_JOGADOR_PULANDO && j->estado <= ESTADO_JOGADOR_PULANDO_CORRENDO ) {
                     j->vel.y = j->velPulo;
                     motobug->estado = ESTADO_INIMIGO_MOTOBUG_MORRENDO;
                 } else {
