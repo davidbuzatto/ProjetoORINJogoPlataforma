@@ -12,6 +12,8 @@
 #include "raylib/raylib.h"
 
 #include "Animacao.h"
+#include "Inimigo.h"
+#include "InimigoMotobug.h"
 #include "Item.h"
 #include "ItemAnel.h"
 #include "Macros.h"
@@ -528,7 +530,7 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
 
 static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
 
-    /*ElementoMapa *el = mapa->itens;
+    ElementoMapa *el = mapa->inimigos;
 
     while ( el != NULL ) {
 
@@ -546,38 +548,53 @@ static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
             qa->retColisao.height
         };
 
-        Item *item = (Item*) el->objeto;
+        Inimigo *inimigo = (Inimigo*) el->objeto;
 
-        if ( item->tipo == TIPO_ITEM_ANEL ) {
+        QuadroAnimacao *qaInimigo = NULL;
+        bool *olhandoParaDireita = NULL;
+        Rectangle *ret = NULL;
+        Vector2 *vel = NULL;
 
-            ItemAnel *itemAnel = (ItemAnel*) item->objeto;
+        if ( inimigo->tipo == TIPO_INIMIGO_MOTOBUG ) {
 
-            if ( !itemAnel->ativo || itemAnel->estado == ESTADO_ITEM_ANEL_COLETADO ) {
+            InimigoMotobug *motobug = (InimigoMotobug*) inimigo->objeto;
+            qa = getQuadroAnimacaoAtualInimigoMotobug( motobug );
+            olhandoParaDireita = &motobug->olhandoParaDireita;
+            ret = &motobug->ret;
+            vel = &motobug->vel;
+
+            if ( !motobug->ativo || motobug->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
                 el = el->proximo;
                 continue;
             }
 
-            QuadroAnimacao *qaItem = getQuadroAnimacaoAtualItemAnel( itemAnel );
+            float deslocamentoX = *olhandoParaDireita
+                ? -qa->deslocamentoDesenho.x + ret->width - qa->retColisao.x - qa->retColisao.width
+                : qa->deslocamentoDesenho.x + qa->retColisao.x;
+            float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
 
-            float dItemX = qaItem->deslocamentoDesenho.x + qa->retColisao.x;
-            float dItemY = qaItem->deslocamentoDesenho.y + qa->retColisao.y;
-            
-            Rectangle retColItemCalculado = {
-                itemAnel->ret.x + dItemX,
-                itemAnel->ret.y + dItemY,
-                qaItem->retColisao.width,
-                qaItem->retColisao.height
+            Rectangle retColInimigoCalculado = {
+                ret->x + deslocamentoX,
+                ret->y + deslocamentoY,
+                qa->retColisao.width,
+                qa->retColisao.height
             };
 
-            if ( CheckCollisionRecs( retColCalculado, retColItemCalculado ) ) {
-                itemAnel->estado = ESTADO_ITEM_ANEL_COLETADO;
-                j->quantidadeAneis++;
+            if ( CheckCollisionRecs( retColCalculado, retColInimigoCalculado ) ) {
+
+                if ( j->estado >= ESTADO_JOGADOR_PULANDO && j->estado <= ESTADO_JOGADOR_PULANDO_RAPIDO ) {
+                    j->vel.y = j->velPulo;
+                    motobug->estado = ESTADO_INIMIGO_MOTOBUG_MORRENDO;
+                } else {
+                    j->quantidadeAneis = 0;
+                }
+
             }
 
         }
 
         el = el->proximo;
 
-    }*/
+    }
 
 }

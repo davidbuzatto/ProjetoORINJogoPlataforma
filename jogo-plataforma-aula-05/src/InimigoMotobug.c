@@ -18,6 +18,7 @@
 #include "Tipos.h"
 
 static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
 static Animacao *getAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -67,25 +68,23 @@ InimigoMotobug *criarInimigoMotobug( Rectangle ret, Color cor ) {
     novoInimigo->animacaoMorrendo.quadroAtual = 0;
     novoInimigo->animacaoMorrendo.contadorTempoQuadro = 0.0f;
     novoInimigo->animacaoMorrendo.pararNoUltimoQuadro = false;
-    novoInimigo->animacaoMorrendo.executarUmaVez = false;
+    novoInimigo->animacaoMorrendo.executarUmaVez = true;
     novoInimigo->animacaoMorrendo.finalizada = false;
     criarQuadrosAnimacao( &novoInimigo->animacaoMorrendo, novoInimigo->animacaoMorrendo.quantidadeQuadros );
     inicializarQuadrosAnimacao( 
         novoInimigo->animacaoMorrendo.quadros,
         novoInimigo->animacaoMorrendo.quantidadeQuadros,
-        250,             // duração padrão para todos os quadros
-        1, 1,            // início
-        40, 30,          // dimensões
-        1,               // separação
-        0, 0,            // deslocamento
-        false,           // de trás para frente
-        (Rectangle) {    // retângulo de colisão padrão para cada quadro
-            2, 2, 68, 58
-        }
+        100,              // duração padrão para todos os quadros
+        169, 1,           // início
+        32, 32,           // dimensões
+        1,                // separação
+        0, 0,             // deslocamento
+        false,            // de trás para frente
+        (Rectangle) { 0 } // retângulo de colisão padrão para cada quadro
     );
 
     novoInimigo->animacoes[ESTADO_INIMIGO_MOTOBUG_ANDANDO] = &novoInimigo->animacaoAndando; quantidadeAnimacoes++;
-    novoInimigo->animacoes[ESTADO_INIMIGO_MOTOBUG_MORRENDO] = &novoInimigo->animacaoMorrendo; quantidadeAnimacoes++;
+    //novoInimigo->animacoes[ESTADO_INIMIGO_MOTOBUG_MORRENDO] = &novoInimigo->animacaoMorrendo; quantidadeAnimacoes++;
     novoInimigo->quantidadeAnimacoes = quantidadeAnimacoes;
 
     return novoInimigo;
@@ -111,38 +110,43 @@ void atualizarInimigoMotobug( InimigoMotobug *inimigo, GameWorld *gw, float delt
 
     if ( inimigo->ativo ) {
 
-        Animacao *animacaoAtual = getAnimacaoAtualInimigoMotobug( inimigo );
-        atualizarAnimacao( animacaoAtual, delta );
-
-        Inimigo ini = {
-            .objeto = inimigo,
-            .tipo = TIPO_INIMIGO_MOTOBUG
-        };
-
         if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_ANDANDO ) {
+
+            Animacao *animacaoAtual = getAnimacaoAtualInimigoMotobug( inimigo );
+            atualizarAnimacao( animacaoAtual, delta );
+
+            Inimigo ini = {
+                .objeto = inimigo,
+                .tipo = TIPO_INIMIGO_MOTOBUG
+            };
+
             if ( inimigo->olhandoParaDireita ) {
                 inimigo->vel.x = inimigo->velAndando;
             } else {
                 inimigo->vel.x = -inimigo->velAndando;
             }
-        } else {
-            inimigo->vel.x = 0.0f;
-        }
 
-        // fase X
-        inimigo->ret.x += inimigo->vel.x * delta;
-        resolverColisaoInimigoObstaculosMapaX( &ini, gw->mapa );
+            // fase X
+            inimigo->ret.x += inimigo->vel.x * delta;
+            resolverColisaoInimigoObstaculosMapaX( &ini, gw->mapa );
 
-        // fase Y
-        inimigo->vel.y += gw->gravidade * delta;
-        if ( inimigo->vel.y > inimigo->velMaxQueda ) {
-            inimigo->vel.y = inimigo->velMaxQueda;
-        }
-        inimigo->ret.y += inimigo->vel.y * delta;
-        resolverColisaoInimigoObstaculosMapaY( &ini, gw->mapa );
+            inimigo->vel.y += gw->gravidade * delta;
+            if ( inimigo->vel.y > inimigo->velMaxQueda ) {
+                inimigo->vel.y = inimigo->velMaxQueda;
+            }
 
-        if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO && animacaoAtual->finalizada ) {
-            inimigo->ativo = false;
+            // fase Y
+            inimigo->ret.y += inimigo->vel.y * delta;
+            resolverColisaoInimigoObstaculosMapaY( &ini, gw->mapa );
+
+        } else if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
+
+            atualizarAnimacao( &inimigo->animacaoMorrendo, delta );
+
+            if ( inimigo->animacaoMorrendo.finalizada ) {
+                inimigo->ativo = false;
+            }
+
         }
 
     }
@@ -153,14 +157,23 @@ void atualizarInimigoMotobug( InimigoMotobug *inimigo, GameWorld *gw, float delt
  * @brief Desenha um inimigo (motobug).
  */
 void desenharInimigoMotobug( InimigoMotobug *inimigo ) {
+
     if ( inimigo->ativo ) {
-        QuadroAnimacao *qa = getQuadroAnimacaoAtualInimigoMotobug( inimigo );
-        desenharQuadroAnimacaoInimigoMotobug( inimigo, qa, (Vector2) { 0 }, WHITE );
+
+        if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_ANDANDO ) {
+            QuadroAnimacao *qa = getQuadroAnimacaoAtualInimigoMotobug( inimigo );
+            desenharQuadroAnimacaoInimigoMotobug( inimigo, qa, (Vector2) { 0 }, WHITE );
+        } else if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
+            desenharQuadroAnimacaoInimigoMotobugMorrendo( inimigo, getQuadroAtualAnimacao( &inimigo->animacaoMorrendo ), (Vector2) { 0 }, WHITE );
+        }
+
         if ( MOSTRAR_RETANGULOS ) {
             DrawRectangleRec( inimigo->ret, Fade( inimigo->cor, 0.5f ) );
             DrawRectangleLines( inimigo->ret.x, inimigo->ret.y, inimigo->ret.width, inimigo->ret.height, BLACK );
         }
+
     }
+
 }
 
 /**
@@ -200,6 +213,33 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
             float yDesenho = inimigo->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
+
+    }
+
+}
+
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+
+    if ( qa != NULL ) {
+        
+        DrawTexturePro(
+            rm.texturaBadniks,
+            (Rectangle) {
+                qa->fonte.x,
+                qa->fonte.y,
+                qa->fonte.width,
+                qa->fonte.height
+            },
+            (Rectangle) {
+                deslocamento.x + inimigo->ret.x + qa->deslocamentoDesenho.x,
+                deslocamento.y + inimigo->ret.y + qa->deslocamentoDesenho.y,
+                qa->fonte.width * 2,
+                qa->fonte.height * 2
+            },
+            (Vector2) { 0 },
+            0.0f,
+            tonalidade
+        );
 
     }
 

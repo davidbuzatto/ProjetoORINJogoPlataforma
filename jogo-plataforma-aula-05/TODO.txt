@@ -1,1 +1,3 @@
 Terminar a implementação dos inimigos.
+    Separar a animação de explosão para acontecer na posição, sem redimensionamento igual do inimigo.
+    Dar spawn no bichinho.
