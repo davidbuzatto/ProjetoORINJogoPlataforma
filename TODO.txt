@@ -1,8 +1,25 @@
-Aula 06:
-    Vidas;
-    Sons;
-    Hud;
-    Reset.
-
-Aula 07 ????
-    Fases;
+Objetivos:
+    Implementar HUD;
+        Implementar score (pontuação) (extra);
+    Implementar perda de vida com reinício da fase;
+        Implementar animação de dano com perda de vida e/ou perda dos anéis (recoletáveis) (extra);
+    Implementar Game Over;
+        Implementar tela de continue (extra);
+    Implementar pelo menos mais 2 inimigos;
+    Implementar caixas de item (aneis, vidas e power-ups);
+        Implementar poder do power-up no pulo duplo (extra);
+    Modelar apropriadamente a primeira fase;
+        Criar mais tiles (extra);
+        Implementar plataformas que se movimentam (extra);
+        Implementar mais uma fase, com transição entre as fases (extra).
+    
+Sprites:
+    https://www.spriters-resource.com/sega_genesis/sonicth1/
+    https://www.spriters-resource.com/sega_genesis/sonicth2/
+    https://www.spriters-resource.com/sega_genesis/sonicth3/
+    https://www.spriters-resource.com/sega_genesis/snk/
+    
+Sons:
+    https://sounds.spriters-resource.com/sega_genesis/sonicth1/
+    https://sounds.spriters-resource.com/sega_genesis/sonicth2/
+    https://sounds.spriters-resource.com/sega_genesis/sonicth3/
