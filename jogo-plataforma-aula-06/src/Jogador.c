@@ -584,14 +584,15 @@ static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
         if ( inimigo->tipo == TIPO_INIMIGO_MOTOBUG ) {
 
             InimigoMotobug *motobug = (InimigoMotobug*) inimigo->objeto;
-            qaInimigo = getQuadroAnimacaoAtualInimigoMotobug( motobug );
-            olhandoParaDireita = &motobug->olhandoParaDireita;
-            ret = &motobug->ret;
 
             if ( !motobug->ativo || motobug->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
                 el = el->proximo;
                 continue;
             }
+
+            qaInimigo = getQuadroAnimacaoAtualInimigoMotobug( motobug );
+            olhandoParaDireita = &motobug->olhandoParaDireita;
+            ret = &motobug->ret;
 
             float deslocamentoX = *olhandoParaDireita
                 ? ret->width - qaInimigo->retColisao.x - qaInimigo->retColisao.width

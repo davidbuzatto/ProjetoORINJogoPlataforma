@@ -12,6 +12,7 @@ Objetivos:
         Para baixo ao andar;
         Para baixo parado e pressinando pulo;
     Implementar animação de frenagem (extra);
+    Implementar a aparição dos bichinhos ao matar os inimigos (extra);
     Modelar apropriadamente a primeira fase;
         Criar mais tiles (extra);
         Implementar molas amarelas e vermelhas (extra);
