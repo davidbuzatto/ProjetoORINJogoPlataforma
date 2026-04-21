@@ -70,7 +70,6 @@ typedef struct QuadroAnimacao {
     Rectangle fonte;
     int duracao;
     Rectangle retColisao; // deve ser interpretado como posicionamento relativo
-    Vector2 deslocamentoDesenho;
 } QuadroAnimacao;
 
 /**

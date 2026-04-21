@@ -86,23 +86,21 @@ void resolverColisaoInimigoObstaculosMapaX( Inimigo *inimigo, Mapa *mapa ) {
 
         bool *olhandoParaDireita = NULL;
         Rectangle *ret = NULL;
-        Vector2 *vel = NULL;
 
         if ( inimigo->tipo == TIPO_INIMIGO_MOTOBUG ) {
             InimigoMotobug *motobug = (InimigoMotobug*) inimigo->objeto;
             qa = getQuadroAnimacaoAtualInimigoMotobug( motobug );
             olhandoParaDireita = &motobug->olhandoParaDireita;
             ret = &motobug->ret;
-            vel = &motobug->vel;
         } else {
             el = el->proximo;
             continue;
         }
 
         float deslocamentoX = *olhandoParaDireita
-            ? -qa->deslocamentoDesenho.x + ret->width - qa->retColisao.x - qa->retColisao.width
-            : qa->deslocamentoDesenho.x + qa->retColisao.x;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            ? ret->width - qa->retColisao.x - qa->retColisao.width
+            : qa->retColisao.x;
+        float deslocamentoY = qa->retColisao.y;
 
         Rectangle retColCalculado = {
             ret->x + deslocamentoX,
@@ -157,9 +155,9 @@ void resolverColisaoInimigoObstaculosMapaY( Inimigo *inimigo, Mapa *mapa ) {
         }
 
         float deslocamentoX = *olhandoParaDireita
-            ? -qa->deslocamentoDesenho.x + ret->width - qa->retColisao.x - qa->retColisao.width
-            : qa->deslocamentoDesenho.x + qa->retColisao.x;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            ? ret->width - qa->retColisao.x - qa->retColisao.width
+            : qa->retColisao.x;
+        float deslocamentoY = qa->retColisao.y;
 
         Rectangle retColCalculado = {
             ret->x + deslocamentoX,

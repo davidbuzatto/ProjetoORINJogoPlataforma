@@ -57,7 +57,6 @@ InimigoMotobug *criarInimigoMotobug( Rectangle ret, Color cor ) {
         1, 1,            // início
         40, 30,          // dimensões
         1,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             2, 2, 68, 58
@@ -78,7 +77,6 @@ InimigoMotobug *criarInimigoMotobug( Rectangle ret, Color cor ) {
         169, 1,           // início
         32, 32,           // dimensões
         1,                // separação
-        0, 0,             // deslocamento
         false,            // de trás para frente
         (Rectangle) { 0 } // retângulo de colisão padrão para cada quadro
     );
@@ -196,8 +194,8 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
                 qa->fonte.height
             },
             (Rectangle) {
-                deslocamento.x + inimigo->ret.x + qa->deslocamentoDesenho.x,
-                deslocamento.y + inimigo->ret.y + qa->deslocamentoDesenho.y,
+                deslocamento.x + inimigo->ret.x,
+                deslocamento.y + inimigo->ret.y,
                 inimigo->ret.width,
                 inimigo->ret.height
             },
@@ -208,9 +206,9 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
 
         if ( MOSTRAR_RETANGULOS ) {
             float xDesenho = inimigo->olhandoParaDireita
-                ? inimigo->ret.x - qa->deslocamentoDesenho.x + inimigo->ret.width - qa->retColisao.x - qa->retColisao.width
-                : inimigo->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
-            float yDesenho = inimigo->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+                ? inimigo->ret.x + inimigo->ret.width - qa->retColisao.x - qa->retColisao.width
+                : inimigo->ret.x + qa->retColisao.x;
+            float yDesenho = inimigo->ret.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 
@@ -231,8 +229,8 @@ static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimig
                 qa->fonte.height
             },
             (Rectangle) {
-                deslocamento.x + inimigo->ret.x + qa->deslocamentoDesenho.x,
-                deslocamento.y + inimigo->ret.y + qa->deslocamentoDesenho.y,
+                deslocamento.x + inimigo->ret.x,
+                deslocamento.y + inimigo->ret.y,
                 qa->fonte.width * 2,
                 qa->fonte.height * 2
             },

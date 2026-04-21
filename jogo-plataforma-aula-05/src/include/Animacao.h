@@ -19,8 +19,6 @@ void inicializarQuadrosAnimacao(
     int larguraFonte,
     int alturaFonte,
     int espacamentoFonte,
-    int deslocamentoX,
-    int deslocamentoY,
     bool deTrasParaFrente,
     Rectangle retColisaoPadrao
 );

@@ -49,7 +49,6 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
         1, 1,            // início
         16, 16,          // dimensões
         1,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             0, 0, 32, 32
@@ -70,7 +69,6 @@ ItemAnel *criarItemAnel( Rectangle ret, Color cor ) {
         1, 18,            // início
         16, 16,           // dimensões
         1,                // separação
-        0, 0,             // deslocamento
         false,            // de trás para frente
         (Rectangle) { 0 } // retângulo de colisão padrão para cada quadro
     );
@@ -137,8 +135,8 @@ static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, 
             rm.texturaItens,
             qa->fonte,
             (Rectangle) {
-                deslocamento.x + item->ret.x + qa->deslocamentoDesenho.x,
-                deslocamento.y + item->ret.y + qa->deslocamentoDesenho.y,
+                deslocamento.x + item->ret.x,
+                deslocamento.y + item->ret.y,
                 item->ret.width,
                 item->ret.height
             },
@@ -148,8 +146,8 @@ static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, 
         );
 
         if ( MOSTRAR_RETANGULOS ) {
-            float xDesenho = item->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x;
-            float yDesenho = item->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+            float xDesenho = item->ret.x + qa->retColisao.x;
+            float yDesenho = item->ret.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 
