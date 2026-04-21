@@ -18,7 +18,7 @@
 #include "Tipos.h"
 
 static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade );
-static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade );
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, float escala, Color tonalidade );
 static Animacao *getAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -162,7 +162,7 @@ void desenharInimigoMotobug( InimigoMotobug *inimigo ) {
             QuadroAnimacao *qa = getQuadroAnimacaoAtualInimigoMotobug( inimigo );
             desenharQuadroAnimacaoInimigoMotobug( inimigo, qa, WHITE );
         } else if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
-            desenharQuadroAnimacaoInimigoMotobugMorrendo( inimigo, getQuadroAtualAnimacao( &inimigo->animacaoMorrendo ), WHITE );
+            desenharQuadroAnimacaoInimigoMotobugMorrendo( inimigo, getQuadroAtualAnimacao( &inimigo->animacaoMorrendo ), 2.0f, WHITE );
         }
 
         if ( MOSTRAR_RETANGULOS ) {
@@ -211,7 +211,7 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
 
 }
 
-static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade ) {
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, float escala, Color tonalidade ) {
 
     if ( qa != NULL ) {
         
@@ -221,8 +221,8 @@ static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimig
             (Rectangle) {
                 inimigo->ret.x,
                 inimigo->ret.y,
-                qa->fonte.width * 2, // TODO ajustar?
-                qa->fonte.height * 2
+                qa->fonte.width * escala,
+                qa->fonte.height * escala
             },
             (Vector2) { 0 },
             0.0f,

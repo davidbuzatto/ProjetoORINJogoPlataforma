@@ -50,12 +50,12 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
 
     novoJogador->velAndando = 200;
     novoJogador->velAndandoRapido = 400;
-    novoJogador->velCorrendo = 600;
+    novoJogador->velCorrendo = 800;
     novoJogador->velPulo = -550;
     novoJogador->velMaxQueda = 600;
 
-    novoJogador->aceleracao = 400;
-    novoJogador->desaceleracao = 600;
+    novoJogador->aceleracao = 200;
+    novoJogador->desaceleracao = 400;
     novoJogador->frenagem = 1800;
 
     novoJogador->quantidadePulos = 0;
@@ -568,6 +568,7 @@ static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
                 if ( j->estado >= ESTADO_JOGADOR_PULANDO && j->estado <= ESTADO_JOGADOR_PULANDO_CORRENDO ) {
                     j->vel.y = j->velPulo;
                     motobug->estado = ESTADO_INIMIGO_MOTOBUG_MORRENDO;
+                    return; // um inimigo de cada vez!
                 } else {
                     j->quantidadeAneis = 0;
                     trace( "dano sonic!" );
