@@ -16,7 +16,7 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Color tonalidade );
 static Animacao *getAnimacaoAtualItemAnel( ItemAnel *item );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -112,7 +112,7 @@ void atualizarItemAnel( ItemAnel *item, float delta ) {
 void desenharItemAnel( ItemAnel *item ) {
     if ( item->ativo ) {
         QuadroAnimacao *qa = getQuadroAnimacaoAtualItemAnel( item );
-        desenharQuadroAnimacaoItemAnel( item, qa, (Vector2) { 0 }, WHITE );
+        desenharQuadroAnimacaoItemAnel( item, qa, WHITE );
         if ( MOSTRAR_RETANGULOS ) {
             DrawRectangleRec( item->ret, Fade( item->cor, 0.5f ) );
             DrawRectangleLines( item->ret.x, item->ret.y, item->ret.width, item->ret.height, BLACK );
@@ -127,19 +127,14 @@ QuadroAnimacao *getQuadroAnimacaoAtualItemAnel( ItemAnel *item ) {
     return getQuadroAtualAnimacao( getAnimacaoAtualItemAnel( item ) );
 }
 
-static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoItemAnel( ItemAnel *item, QuadroAnimacao *qa, Color tonalidade ) {
 
     if ( qa != NULL ) {
 
         DrawTexturePro(
             rm.texturaItens,
             qa->fonte,
-            (Rectangle) {
-                deslocamento.x + item->ret.x,
-                deslocamento.y + item->ret.y,
-                item->ret.width,
-                item->ret.height
-            },
+            item->ret,
             (Vector2) { 0 },
             0.0f,
             tonalidade

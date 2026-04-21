@@ -21,7 +21,7 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Color tonalidade );
 static QuadroAnimacao *getQuadroAnimacaoAtualJogador( Jogador *j );
 static Animacao *getAnimacaoAtualJogador( Jogador *j );
 
@@ -335,14 +335,14 @@ void atualizarJogador( Jogador *j, GameWorld *gw, float delta ) {
  */
 void desenharJogador( Jogador *j ) {
     QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
-    desenharQuadroAnimacaoJogador( j, qa, (Vector2) { 0 }, WHITE );
+    desenharQuadroAnimacaoJogador( j, qa, WHITE );
     if ( MOSTRAR_RETANGULOS ) {
         DrawRectangleRec( j->ret, Fade( j->cor, 0.5f ) );
         DrawRectangleLines( j->ret.x, j->ret.y, j->ret.width, j->ret.height, BLACK );
     }
 }
 
-static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Color tonalidade ) {
 
     if ( qa != NULL ) {
 
@@ -354,12 +354,7 @@ static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vecto
                 j->olhandoParaDireita ? qa->fonte.width : -qa->fonte.width,
                 qa->fonte.height
             },
-            (Rectangle) {
-                deslocamento.x + j->ret.x,
-                deslocamento.y + j->ret.y,
-                j->ret.width,
-                j->ret.height
-            },
+            j->ret,
             (Vector2) { 0 },
             0.0f,
             tonalidade

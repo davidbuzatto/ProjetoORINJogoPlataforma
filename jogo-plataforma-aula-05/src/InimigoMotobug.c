@@ -17,8 +17,8 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
-static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade );
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade );
 static Animacao *getAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo );
 
 static const bool MOSTRAR_RETANGULOS = false;
@@ -160,9 +160,9 @@ void desenharInimigoMotobug( InimigoMotobug *inimigo ) {
 
         if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_ANDANDO ) {
             QuadroAnimacao *qa = getQuadroAnimacaoAtualInimigoMotobug( inimigo );
-            desenharQuadroAnimacaoInimigoMotobug( inimigo, qa, (Vector2) { 0 }, WHITE );
+            desenharQuadroAnimacaoInimigoMotobug( inimigo, qa, WHITE );
         } else if ( inimigo->estado == ESTADO_INIMIGO_MOTOBUG_MORRENDO ) {
-            desenharQuadroAnimacaoInimigoMotobugMorrendo( inimigo, getQuadroAtualAnimacao( &inimigo->animacaoMorrendo ), (Vector2) { 0 }, WHITE );
+            desenharQuadroAnimacaoInimigoMotobugMorrendo( inimigo, getQuadroAtualAnimacao( &inimigo->animacaoMorrendo ), WHITE );
         }
 
         if ( MOSTRAR_RETANGULOS ) {
@@ -181,7 +181,7 @@ QuadroAnimacao *getQuadroAnimacaoAtualInimigoMotobug( InimigoMotobug *inimigo ) 
     return getQuadroAtualAnimacao( getAnimacaoAtualInimigoMotobug( inimigo ) );
 }
 
-static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade ) {
 
     if ( qa != NULL ) {
         
@@ -193,12 +193,7 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
                 inimigo->olhandoParaDireita ? -qa->fonte.width : qa->fonte.width,
                 qa->fonte.height
             },
-            (Rectangle) {
-                deslocamento.x + inimigo->ret.x,
-                deslocamento.y + inimigo->ret.y,
-                inimigo->ret.width,
-                inimigo->ret.height
-            },
+            inimigo->ret,
             (Vector2) { 0 },
             0.0f,
             tonalidade
@@ -216,22 +211,17 @@ static void desenharQuadroAnimacaoInimigoMotobug( InimigoMotobug *inimigo, Quadr
 
 }
 
-static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoInimigoMotobugMorrendo( InimigoMotobug *inimigo, QuadroAnimacao *qa, Color tonalidade ) {
 
     if ( qa != NULL ) {
         
         DrawTexturePro(
             rm.texturaBadniks,
+            qa->fonte,
             (Rectangle) {
-                qa->fonte.x,
-                qa->fonte.y,
-                qa->fonte.width,
-                qa->fonte.height
-            },
-            (Rectangle) {
-                deslocamento.x + inimigo->ret.x,
-                deslocamento.y + inimigo->ret.y,
-                qa->fonte.width * 2,
+                inimigo->ret.x,
+                inimigo->ret.y,
+                qa->fonte.width * 2, // TODO ajustar?
                 qa->fonte.height * 2
             },
             (Vector2) { 0 },
