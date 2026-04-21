@@ -1,8 +1,3 @@
-Aula 05:
-    Inimigos;
-    Colisão Inimigos X Cenário;
-    Colisão Inimigos X Jogador;
-    
 Aula 06:
     Vidas;
     Sons;
