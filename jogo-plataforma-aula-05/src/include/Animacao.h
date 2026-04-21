@@ -28,3 +28,5 @@ void atualizarAnimacao( Animacao *anim, float delta );
 int getNumeroQuadroAtualAnimacao( Animacao *anim );
 QuadroAnimacao *getQuadroAtualAnimacao( Animacao *anim );
 void reiniciarAnimacao( Animacao *anim );
+
+void sincronizarAnimacao( Animacao *destino, Animacao *origem );

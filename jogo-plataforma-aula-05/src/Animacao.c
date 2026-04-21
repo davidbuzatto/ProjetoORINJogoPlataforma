@@ -104,3 +104,13 @@ void reiniciarAnimacao( Animacao *anim ) {
     anim->contadorTempoQuadro = 0;
     anim->finalizada = false;
 }
+
+void sincronizarAnimacao( Animacao *destino, Animacao *origem ) {
+    if ( destino->quantidadeQuadros != origem->quantidadeQuadros ) {
+        TraceLog( LOG_WARNING, "sincronizarAnimacao: animações com quantidade de quadros diferente (%d != %d)",
+            destino->quantidadeQuadros, origem->quantidadeQuadros );
+        return;
+    }
+    destino->quadroAtual = origem->quadroAtual;
+    destino->contadorTempoQuadro = 0.0f;
+}

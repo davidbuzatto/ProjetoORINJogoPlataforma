@@ -239,6 +239,8 @@ void destruirJogador( Jogador *j ) {
  */
 void entradaJogador( Jogador *j, float delta ) {
 
+    EstadoJogador estadoAnterior = j->estado;
+
     if ( IsKeyDown( KEY_RIGHT ) ) {
         if ( j->vel.x < 0 ) {
             j->vel.x += j->frenagem * delta;
@@ -301,6 +303,13 @@ void entradaJogador( Jogador *j, float delta ) {
     if ( IsKeyPressed( KEY_SPACE ) && j->quantidadePulos < j->quantidadeMaxPulos ) {
         j->vel.y = j->velPulo;
         j->quantidadePulos++;
+    }
+
+    // sincronização de animações andando e andando rápido
+    if ( estadoAnterior == ESTADO_JOGADOR_ANDANDO && j->estado == ESTADO_JOGADOR_ANDANDO_RAPIDO ) {
+        sincronizarAnimacao( &j->animacaoAndandoRapido, &j->animacaoAndando );
+    } else if ( estadoAnterior == ESTADO_JOGADOR_ANDANDO_RAPIDO && j->estado == ESTADO_JOGADOR_ANDANDO ) {
+        sincronizarAnimacao( &j->animacaoAndando, &j->animacaoAndandoRapido );
     }
 
 }
