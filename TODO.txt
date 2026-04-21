@@ -11,7 +11,7 @@ Tarefas:
     == 2) Inimigos e itens ==
         a) Implementar pelo menos mais 2 inimigos;
             Extra: implementar a aparição dos bichinhos ao matar os inimigos;
-        b) Implementar caixas de item (aneis, vidas e power-ups);
+        b) Implementar caixas de item (aneis, vidas, estrelinha, botinha e escudos);
             Extra: implementar poder do power-up no pulo duplo;
 
     == 3) Fases e polimento final ==
