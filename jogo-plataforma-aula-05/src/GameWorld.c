@@ -5,6 +5,7 @@
  *
  * @copyright Copyright (c) 2026
  */
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -116,8 +117,12 @@ static void atualizarCamera( GameWorld *gw ) {
     c->offset.x = GetScreenWidth() / 2;
     c->offset.y = GetScreenHeight() / 2;
 
-    c->target.x = j->ret.x + j->ret.width / 2;
-    c->target.y = j->ret.y + j->ret.height / 2;
+    // O target é arredondado para o inteiro mais próximo para garantir que a
+    // translação da câmera ocorra sempre em posições inteiras de pixel. Sem esse
+    // arredondamento, o valor float contínuo de ret.x faz os tiles serem
+    // renderizados em posições subpixel, causando frestas visíveis entre eles.
+    c->target.x = roundf( j->ret.x + j->ret.width / 2.0f );
+    c->target.y = roundf( j->ret.y + j->ret.height / 2.0f );
 
     int minX = GetScreenWidth() / 2;
     int maxX = calcularLarguraMapa( gw->mapa ) - GetScreenWidth() / 2;

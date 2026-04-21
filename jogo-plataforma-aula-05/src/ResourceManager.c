@@ -55,6 +55,15 @@ void loadResourcesResourceManager( void ) {
     rm.texturaTerreno = LoadTexture( "resources/imagens/tiles/terreno.png" );
     rm.texturaFundo = LoadTexture( "resources/imagens/fundo/fundo.png" );
 
+    // Filtro de textura nearest-neighbor (ponto) para todas as texturas do jogo.
+    // Evita interpolação bilinear nas bordas dos tiles e sprites, que causaria
+    // bleeding de cor entre pixels adjacentes — efeito indesejável em pixel art.
+    SetTextureFilter( rm.texturaJogador,  TEXTURE_FILTER_POINT );
+    SetTextureFilter( rm.texturaBadniks,  TEXTURE_FILTER_POINT );
+    SetTextureFilter( rm.texturaItens,    TEXTURE_FILTER_POINT );
+    SetTextureFilter( rm.texturaTerreno,  TEXTURE_FILTER_POINT );
+    SetTextureFilter( rm.texturaFundo,    TEXTURE_FILTER_POINT );
+
     //rm.soundExample = LoadSound( "resources/sfx/powerUp.wav" );
     //rm.musicExample = LoadMusicStream( "resources/musics/overworld1.ogg" );
 
