@@ -71,7 +71,7 @@ void loadResourcesResourceManager( void ) {
     rm.somMorte = LoadSound( "resources/sons/efeitos/morte.wav" );
     rm.somPulo = LoadSound( "resources/sons/efeitos/pulo.wav" );
 
-    //rm.musicaFase01 = LoadMusicStream( "resources/sons/musicas/fase01.mp3" );
+    rm.musicaFase01 = LoadMusicStream( "resources/sons/musicas/green-hill-zone.mp3" );
 
 }
 
@@ -90,6 +90,6 @@ void unloadResourcesResourceManager( void ) {
     UnloadSound( rm.somMorte );
     UnloadSound( rm.somPulo );
 
-    //UnloadMusicStream( rm.musicaFase01 );
+    UnloadMusicStream( rm.musicaFase01 );
 
 }

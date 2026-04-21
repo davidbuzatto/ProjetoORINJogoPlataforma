@@ -66,6 +66,16 @@ void destroyGameWorld( GameWorld *gw ) {
  */
 void updateGameWorld( GameWorld *gw, float delta ) {
 
+    if ( !IsMusicStreamPlaying( rm.musicaFase01 ) ) {
+        PlayMusicStream( rm.musicaFase01 );
+    } else {
+        UpdateMusicStream( rm.musicaFase01 );
+    }
+
+    if ( IsKeyPressed( KEY_R ) ) {
+
+    }
+
     Jogador *j = gw->jogador;
     atualizarMapa( gw->mapa, gw, delta );
     entradaJogador( j, delta );
