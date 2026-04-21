@@ -64,17 +64,32 @@ void loadResourcesResourceManager( void ) {
     SetTextureFilter( rm.texturaTerreno, TEXTURE_FILTER_POINT );
     SetTextureFilter( rm.texturaFundo, TEXTURE_FILTER_POINT );
 
-    //rm.soundExample = LoadSound( "resources/sfx/powerUp.wav" );
-    //rm.musicExample = LoadMusicStream( "resources/musics/overworld1.ogg" );
+    rm.somAnel = LoadSound( "resources/sons/efeitos/anel.wav" );
+    rm.somFrenagem = LoadSound( "resources/sons/efeitos/frenagem.wav" );
+    rm.somHitComAnel = LoadSound( "resources/sons/efeitos/hit-com-anel.wav" );
+    rm.somHitInimigo = LoadSound( "resources/sons/efeitos/hit-inimigo.wav" );
+    rm.somMorte = LoadSound( "resources/sons/efeitos/morte.wav" );
+    rm.somPulo = LoadSound( "resources/sons/efeitos/pulo.wav" );
+
+    //rm.musicaFase01 = LoadMusicStream( "resources/sons/musicas/fase01.mp3" );
 
 }
 
 void unloadResourcesResourceManager( void ) {
+
     UnloadTexture( rm.texturaJogador );
     UnloadTexture( rm.texturaBadniks );
     UnloadTexture( rm.texturaItens );
     UnloadTexture( rm.texturaTerreno );
     UnloadTexture( rm.texturaFundo );
-    //UnloadSound( rm.soundExample );
-    //UnloadMusicStream( rm.musicExample );
+
+    UnloadSound( rm.somAnel );
+    UnloadSound( rm.somFrenagem );
+    UnloadSound( rm.somHitComAnel );
+    UnloadSound( rm.somHitInimigo );
+    UnloadSound( rm.somMorte );
+    UnloadSound( rm.somPulo );
+
+    //UnloadMusicStream( rm.musicaFase01 );
+
 }

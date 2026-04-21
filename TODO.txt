@@ -8,8 +8,13 @@ Objetivos:
     Implementar pelo menos mais 2 inimigos;
     Implementar caixas de item (aneis, vidas e power-ups);
         Implementar poder do power-up no pulo duplo (extra);
+    Implementar spin (extra);
+        Para baixo ao andar;
+        Para baixo parado e pressinando pulo;
+    Implementar animação de frenagem (extra);
     Modelar apropriadamente a primeira fase;
         Criar mais tiles (extra);
+        Implementar molas amarelas e vermelhas (extra);
         Implementar plataformas que se movimentam (extra);
         Implementar mais uma fase, com transição entre as fases (extra).
     

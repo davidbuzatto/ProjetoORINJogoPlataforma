@@ -35,7 +35,7 @@ GameWorld *createGameWorld( void ) {
 
     //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
     gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
-    gw->jogador = criarJogador( GetScreenWidth() / 2, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
+    gw->jogador = criarJogador( GetScreenWidth() / 2 + 144, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
 
     gw->camera = (Camera2D) {
         .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo

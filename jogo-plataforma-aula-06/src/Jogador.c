@@ -311,6 +311,7 @@ void entradaJogador( Jogador *j, float delta ) {
     if ( IsKeyPressed( KEY_SPACE ) && j->quantidadePulos < j->quantidadeMaxPulos ) {
         j->vel.y = j->velPulo;
         j->quantidadePulos++;
+        PlaySound( rm.somPulo );
     }
 
     // sincronização de animações andando e andando rápido
@@ -543,6 +544,7 @@ static void resolverColisaoJogadorItensMapa( Jogador *j, Mapa *mapa ) {
             if ( CheckCollisionRecs( retColCalculado, retColItemCalculado ) ) {
                 itemAnel->estado = ESTADO_ITEM_ANEL_COLETADO;
                 j->quantidadeAneis++;
+                PlaySound( rm.somAnel );
             }
 
         }
@@ -608,11 +610,14 @@ static void resolverColisaoJogadorInimigosMapa( Jogador *j, Mapa *mapa ) {
                 if ( j->estado >= ESTADO_JOGADOR_PULANDO && j->estado <= ESTADO_JOGADOR_PULANDO_CORRENDO ) {
                     j->vel.y = j->velPulo;
                     motobug->estado = ESTADO_INIMIGO_MOTOBUG_MORRENDO;
+                    PlaySound( rm.somHitInimigo );
                 } else if ( !j->invulneravel ) {
                     if ( j->quantidadeAneis > 0 ) {
                         j->quantidadeAneis = 0;
+                        PlaySound( rm.somHitComAnel );
                     } else {
                         j->quantidadeVidas--;
+                        PlaySound( rm.somMorte );
                     }
                     j->invulneravel = true;
                 }
