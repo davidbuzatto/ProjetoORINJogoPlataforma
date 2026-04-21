@@ -118,6 +118,8 @@ typedef struct Jogador {
     float tempoPiscaPisca;
     float contadorTempoPiscaPisca;
 
+    bool freando;
+
     EstadoJogador estado;
     bool olhandoParaDireita;
 

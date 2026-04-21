@@ -72,6 +72,8 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
     novoJogador->tempoPiscaPisca = 0.05f;
     novoJogador->contadorTempoPiscaPisca = 0.0f;
 
+    novoJogador->freando = false;
+
     novoJogador->estado = ESTADO_JOGADOR_PARADO;
     novoJogador->olhandoParaDireita = true;
 
@@ -252,8 +254,13 @@ void entradaJogador( Jogador *j, float delta ) {
     if ( IsKeyDown( KEY_RIGHT ) ) {
         if ( j->vel.x < 0 ) {
             j->vel.x += j->frenagem * delta;
+            if ( !j->freando && j->estado == ESTADO_JOGADOR_CORRENDO ) {
+                PlaySound( rm.somFrenagem );
+                j->freando = true;
+            }
             if ( j->vel.x > 0 ) {
                 j->vel.x = 0;
+                j->freando = false;
             }
         } else {
             j->vel.x += j->aceleracao * delta;
@@ -265,8 +272,13 @@ void entradaJogador( Jogador *j, float delta ) {
     } else if ( IsKeyDown( KEY_LEFT ) ) {
         if ( j->vel.x > 0 ) {
             j->vel.x -= j->frenagem * delta;
+            if ( !j->freando && j->estado == ESTADO_JOGADOR_CORRENDO ) {
+                PlaySound( rm.somFrenagem );
+                j->freando = true;
+            }
             if ( j->vel.x < 0 ) {
                 j->vel.x = 0;
+                j->freando = false;
             }
         } else {
             j->vel.x -= j->aceleracao * delta;

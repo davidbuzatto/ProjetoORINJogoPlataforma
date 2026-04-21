@@ -26,28 +26,16 @@
 static void desenharFundo( GameWorld *gw );
 static void atualizarCamera( GameWorld *gw );
 
+static void inicializar( GameWorld *gw );
+static void reiniciar( GameWorld *gw );
+
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
  */
 GameWorld *createGameWorld( void ) {
-
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
-
-    //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
-    gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
-    gw->jogador = criarJogador( GetScreenWidth() / 2 + 144, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
-
-    gw->camera = (Camera2D) {
-        .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo
-        .target = { 0 },    // o alvo da câmera, ou seja, a coordenada em que ela está centralizada
-        .rotation = 0.0f,   // rotação da câmera em graus. o pivô é o alvo.
-        .zoom = 1.0f        // zoom da câmera. 1.0f significa sem escala
-    };
-
-    gw->gravidade = 900;
-
+    inicializar( gw );
     return gw;
-
 }
 
 /**
@@ -73,7 +61,8 @@ void updateGameWorld( GameWorld *gw, float delta ) {
     }
 
     if ( IsKeyPressed( KEY_R ) ) {
-
+        reiniciar( gw );
+        return;
     }
 
     Jogador *j = gw->jogador;
@@ -157,5 +146,35 @@ static void atualizarCamera( GameWorld *gw ) {
     if ( c->target.y > maxY ) {
         c->target.y = maxY;
     }
+
+}
+
+static void inicializar( GameWorld *gw ) {
+
+    //gw->mapa = carregarMapa( "resources/mapas/mapaTeste.txt" );
+    gw->mapa = carregarMapa( "resources/mapas/mapa01.txt" );
+    gw->jogador = criarJogador( GetScreenWidth() / 2 + 144, calcularAlturaMapa( gw->mapa ) - 196, 96, 96 );
+
+    gw->camera = (Camera2D) {
+        .offset = { 0 },    // deslocamento relativo da câmera em relação ao alvo
+        .target = { 0 },    // o alvo da câmera, ou seja, a coordenada em que ela está centralizada
+        .rotation = 0.0f,   // rotação da câmera em graus. o pivô é o alvo.
+        .zoom = 1.0f        // zoom da câmera. 1.0f significa sem escala
+    };
+
+    gw->gravidade = 900;
+
+}
+
+static void reiniciar( GameWorld *gw ) {
+
+    destruirMapa( gw->mapa );
+    destruirJogador( gw->jogador );
+
+    if ( IsMusicStreamPlaying( rm.musicaFase01 ) ) {
+        StopMusicStream( rm.musicaFase01 );
+    }
+
+    inicializar( gw );
 
 }
