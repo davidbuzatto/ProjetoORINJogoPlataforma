@@ -20,7 +20,7 @@
 //#include "raylib/raygui.h"       // other compilation units must only include
 //#undef RAYGUI_IMPLEMENTATION     // raygui.h
 
-static void initObstaculos( GameWorld *gw );
+static void criarObstaculos( GameWorld *gw );
 
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
@@ -30,7 +30,7 @@ GameWorld *createGameWorld( void ) {
     GameWorld *gw = (GameWorld*) malloc( sizeof( GameWorld ) );
     gw->jogador = criarJogador( GetScreenWidth() / 2, GetScreenHeight() / 2, 50, 50 );
 
-    initObstaculos( gw );
+    criarObstaculos( gw );
 
     gw->chao = (Rectangle) {
         .x = 0,
@@ -84,7 +84,7 @@ void drawGameWorld( GameWorld *gw ) {
 /**
  * @brief Inicializa os obstáculos.
  */
-static void initObstaculos( GameWorld *gw ) {
+static void criarObstaculos( GameWorld *gw ) {
 
     gw->quantidadeObstaculos = 10;
     gw->obstaculos = (Obstaculo*) malloc( sizeof( Obstaculo ) * gw->quantidadeObstaculos );

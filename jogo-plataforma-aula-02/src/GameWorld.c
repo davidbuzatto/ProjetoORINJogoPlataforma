@@ -21,7 +21,7 @@
 //#include "raylib/raygui.h"       // other compilation units must only include
 //#undef RAYGUI_IMPLEMENTATION     // raygui.h
 
-static void updateCamera( GameWorld *gw );
+static void atualizarCamera( GameWorld *gw );
 
 /**
  * @brief Cria uma instância alocada dinamicamente da struct GameWorld.
@@ -65,7 +65,7 @@ void updateGameWorld( GameWorld *gw, float delta ) {
     entradaJogador( j );
     atualizarJogador( j, gw, delta );
 
-    updateCamera( gw );
+    atualizarCamera( gw );
 
 }
 
@@ -88,7 +88,7 @@ void drawGameWorld( GameWorld *gw ) {
 
 }
 
-static void updateCamera( GameWorld *gw ) {
+static void atualizarCamera( GameWorld *gw ) {
 
     Jogador *j = gw->jogador;
     Camera2D *c = &gw->camera;
