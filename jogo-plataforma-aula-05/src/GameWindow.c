@@ -107,7 +107,17 @@ void initGameWindow( GameWindow *gameWindow ) {
 
         // game loop
         while ( !WindowShouldClose() ) {
-            updateGameWorld( gameWindow->gw, GetFrameTime() );
+
+            // O delta time é limitado a 1/30s para evitar que frames muito
+            // longos (ex.: lentidão na inicialização) causem deslocamentos
+            // grandes demais, fazendo personagens atravessarem obstáculos
+            // (tunneling).
+            float delta = GetFrameTime();
+            if ( delta > 1.0f / 30.0f ) {
+                delta = 1.0f / 30.0f;
+            }
+
+            updateGameWorld( gameWindow->gw, delta );
             drawGameWorld( gameWindow->gw );
         }
 
