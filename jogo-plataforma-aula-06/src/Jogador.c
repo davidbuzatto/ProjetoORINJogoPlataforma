@@ -488,8 +488,7 @@ static void resolverColisaoJogadorObstaculosMapaY( Jogador *j, Mapa *mapa ) {
     ElementoMapa *el = mapa->obstaculos;
 
     while ( el != NULL ) {
-
-        Obstaculo *o = (Obstaculo*) el->objeto;
+        
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
         float deslocamentoX = j->olhandoParaDireita
@@ -503,6 +502,8 @@ static void resolverColisaoJogadorObstaculosMapaY( Jogador *j, Mapa *mapa ) {
             qa->retColisao.width,
             qa->retColisao.height
         };
+
+        Obstaculo *o = (Obstaculo*) el->objeto;
 
         if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
             if ( retColCalculado.y + retColCalculado.height / 2 < o->ret.y + o->ret.height / 2 ) {

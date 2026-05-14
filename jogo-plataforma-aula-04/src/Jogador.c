@@ -17,7 +17,7 @@
 #include "ResourceManager.h"
 #include "Tipos.h"
 
-static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade );
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Color tonalidade );
 static QuadroAnimacao *getQuadroAnimacaoAtualJogador( Jogador *j );
 static Animacao *getAnimacaoAtualJogador( Jogador *j );
 
@@ -73,7 +73,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         24, 251,         // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 20, 54, 76
@@ -94,7 +93,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         664, 324,        // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 20, 54, 76
@@ -115,7 +113,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         664, 324,        // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 20, 54, 76
@@ -136,7 +133,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         24, 397,         // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 20, 54, 76
@@ -157,7 +153,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         248, 397,        // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 36, 60, 60
@@ -178,7 +173,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         248, 397,        // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 36, 60, 60
@@ -199,7 +193,6 @@ Jogador *criarJogador( float x, float y, float w, float h ) {
         248, 397,        // início
         48, 48,          // dimensões
         4,               // separação
-        0, 0,            // deslocamento
         false,           // de trás para frente
         (Rectangle) {    // retângulo de colisão padrão para cada quadro
             18, 36, 60, 60
@@ -326,7 +319,7 @@ void atualizarJogador( Jogador *j, GameWorld *gw, float delta ) {
  */
 void desenharJogador( Jogador *j ) {
     QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
-    desenharQuadroAnimacaoJogador( j, qa, (Vector2) { 0 }, WHITE );
+    desenharQuadroAnimacaoJogador( j, qa, WHITE );
     if ( MOSTRAR_RETANGULOS ) {
         DrawRectangleRec( j->ret, Fade( j->cor, 0.5f ) );
         DrawRectangleLines( j->ret.x, j->ret.y, j->ret.width, j->ret.height, BLACK );
@@ -342,7 +335,7 @@ void reiniciarAnimacoesJogador( Jogador *j ) {
     }
 }
 
-static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vector2 deslocamento, Color tonalidade ) {
+static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Color tonalidade ) {
 
     if ( qa != NULL ) {
 
@@ -354,12 +347,7 @@ static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vecto
                 j->olhandoParaDireita ? qa->fonte.width : -qa->fonte.width,
                 qa->fonte.height
             },
-            (Rectangle) {
-                deslocamento.x + j->ret.x + ( j->olhandoParaDireita ? qa->deslocamentoDesenho.x : -qa->deslocamentoDesenho.x ),
-                deslocamento.y + j->ret.y + qa->deslocamentoDesenho.y,
-                j->ret.width,
-                j->ret.height
-            },
+            j->ret,
             (Vector2) { 0 },
             0.0f,
             tonalidade
@@ -367,9 +355,9 @@ static void desenharQuadroAnimacaoJogador( Jogador *j, QuadroAnimacao *qa, Vecto
 
         if ( MOSTRAR_RETANGULOS ) {
             float xDesenho = j->olhandoParaDireita
-                ? j->ret.x + qa->deslocamentoDesenho.x + qa->retColisao.x
-                : j->ret.x - qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-            float yDesenho = j->ret.y + qa->deslocamentoDesenho.y + qa->retColisao.y;
+                ? j->ret.x + qa->retColisao.x
+                : j->ret.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
+            float yDesenho = j->ret.y + qa->retColisao.y;
             DrawRectangle( xDesenho, yDesenho, qa->retColisao.width, qa->retColisao.height, Fade( GREEN, 0.5f ) );
         }
 
@@ -394,13 +382,12 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
 
     while ( el != NULL ) {
 
-        Obstaculo *o = &el->obstaculo;
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
         float deslocamentoX = j->olhandoParaDireita
-            ? qa->deslocamentoDesenho.x + qa->retColisao.x
-            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            ? qa->retColisao.x
+            : j->ret.width - qa->retColisao.x - qa->retColisao.width;
+        float deslocamentoY = qa->retColisao.y;
 
         Rectangle retColCalculado = {
             j->ret.x + deslocamentoX,
@@ -408,6 +395,8 @@ static void resolverColisaoJogadorMapaX( Jogador *j, Mapa *mapa ) {
             qa->retColisao.width,
             qa->retColisao.height
         };
+
+        Obstaculo *o = &el->obstaculo;
 
         if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
             if ( retColCalculado.x + retColCalculado.width / 2 < o->ret.x + o->ret.width / 2 ) {
@@ -433,13 +422,12 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
 
     while ( el != NULL ) {
 
-        Obstaculo *o = &el->obstaculo;
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
         float deslocamentoX = j->olhandoParaDireita
-            ? qa->deslocamentoDesenho.x + qa->retColisao.x
-            : -qa->deslocamentoDesenho.x + j->ret.width - qa->retColisao.x - qa->retColisao.width;
-        float deslocamentoY = qa->deslocamentoDesenho.y + qa->retColisao.y;
+            ? qa->retColisao.x
+            : j->ret.width - qa->retColisao.x - qa->retColisao.width;
+        float deslocamentoY = qa->retColisao.y;
 
         Rectangle retColCalculado = {
             j->ret.x + deslocamentoX,
@@ -447,6 +435,8 @@ static void resolverColisaoJogadorMapaY( Jogador *j, Mapa *mapa ) {
             qa->retColisao.width,
             qa->retColisao.height
         };
+
+        Obstaculo *o = &el->obstaculo;
 
         if ( CheckCollisionRecs( retColCalculado, o->ret ) ) {
             if ( retColCalculado.y + retColCalculado.height / 2 < o->ret.y + o->ret.height / 2 ) {

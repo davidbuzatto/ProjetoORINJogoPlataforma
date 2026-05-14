@@ -23,8 +23,6 @@ void inicializarQuadrosAnimacao(
     int larguraFonte,
     int alturaFonte,
     int espacamentoFonte,
-    int deslocamentoX,
-    int deslocamentoY,
     bool deTrasParaFrente,
     Rectangle retColisaoPadrao ) {
 
@@ -42,8 +40,7 @@ void inicializarQuadrosAnimacao(
                 alturaFonte
             }, 
             .duracao = duracaoPadrao,
-            .retColisao = retColisaoPadrao,
-            .deslocamentoDesenho = { deslocamentoX, deslocamentoY }
+            .retColisao = retColisaoPadrao
         };
 
     }
