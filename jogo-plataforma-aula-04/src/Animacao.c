@@ -62,11 +62,9 @@ void atualizarAnimacao( Animacao *anim, float delta ) {
 
     anim->contadorTempoQuadro += (int) ( delta * 1000 );
 
-    QuadroAnimacao *frame = getQuadroAtualAnimacao( anim );
+    QuadroAnimacao *quadro = getQuadroAtualAnimacao( anim );
 
-    int actualDuration = frame->duracao;
-
-    if ( anim->contadorTempoQuadro >= actualDuration ) {
+    if ( anim->contadorTempoQuadro >= quadro->duracao ) {
 
         anim->contadorTempoQuadro = 0;
         anim->quadroAtual++;
