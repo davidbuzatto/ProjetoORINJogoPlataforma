@@ -258,7 +258,11 @@ void entradaJogador( Jogador *j, float delta ) {
 
     EstadoJogador estadoAnterior = j->estado;
 
-    if ( IsKeyDown( KEY_RIGHT ) ) {
+    bool direitaDown  = IsKeyDown( KEY_RIGHT )     || ( IsGamepadAvailable( 0 ) && IsGamepadButtonDown( 0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT ) );
+    bool esquerdaDown = IsKeyDown( KEY_LEFT )      || ( IsGamepadAvailable( 0 ) && IsGamepadButtonDown( 0, GAMEPAD_BUTTON_LEFT_FACE_LEFT ) );
+    bool puloPressed  = IsKeyPressed( KEY_SPACE )  || ( IsGamepadAvailable( 0 ) && IsGamepadButtonDown( 0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN ) );
+
+    if ( direitaDown ) {
         if ( j->vel.x < 0 ) {
             j->vel.x += j->frenagem * delta;
             if ( !j->freando && j->estado == ESTADO_JOGADOR_CORRENDO ) {
@@ -276,7 +280,7 @@ void entradaJogador( Jogador *j, float delta ) {
             }
         }
         j->olhandoParaDireita = true;
-    } else if ( IsKeyDown( KEY_LEFT ) ) {
+    } else if ( esquerdaDown ) {
         if ( j->vel.x > 0 ) {
             j->vel.x -= j->frenagem * delta;
             if ( !j->freando && j->estado == ESTADO_JOGADOR_CORRENDO ) {
@@ -327,7 +331,7 @@ void entradaJogador( Jogador *j, float delta ) {
         j->estado = ESTADO_JOGADOR_CORRENDO;
     }
 
-    if ( IsKeyPressed( KEY_SPACE ) && j->quantidadePulos < j->quantidadeMaxPulos ) {
+    if ( puloPressed && j->quantidadePulos < j->quantidadeMaxPulos ) {
         j->vel.y = j->velPulo;
         j->quantidadePulos++;
         PlaySound( rm.somPulo );
@@ -488,7 +492,7 @@ static void resolverColisaoJogadorObstaculosMapaY( Jogador *j, Mapa *mapa ) {
     ElementoMapa *el = mapa->obstaculos;
 
     while ( el != NULL ) {
-        
+
         QuadroAnimacao *qa = getQuadroAnimacaoAtualJogador( j );
 
         float deslocamentoX = j->olhandoParaDireita
